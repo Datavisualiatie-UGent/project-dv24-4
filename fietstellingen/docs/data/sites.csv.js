@@ -19,7 +19,7 @@ const data = csvParse(await text("https://opendata.apps.mow.vlaanderen.be/fietst
     gemeente: d.gemeente,
     interval: d.interval,
     datum_van: d.datum_van
-}));
+})).filter(d => d.interval !== "0");
 
 delete data.columns;
 

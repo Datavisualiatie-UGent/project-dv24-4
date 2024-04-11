@@ -73,15 +73,23 @@ import {createPopUp} from "./components/marker.js";
 ```
 ```js
 var map = L.map('map').setView([51.0000, 4.3000], 9); // De coördinaten zijn voor het middelpunt van België
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
+attribution:'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',    subdomains: 'abcd',
+    maxZoom: 19
 }).addTo(map);
 
 // add markers
 sites.forEach((d) => {
-    L.marker([d.lat, d.long]).addTo(map)
+    const marker = L.marker([d.lat, d.long]).addTo(map)
         .bindPopup(createPopUp(d))
         .bindTooltip(d.naam);
+});
+
+// fixes bug where tooltips opened by dragging would not close
+map.on('dragend', function(e) {
+    sites.forEach((d) => {
+        d.closeTooltip();
+    });
 });
 ```
 

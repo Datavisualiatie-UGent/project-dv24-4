@@ -69,80 +69,11 @@ theme: dashboard
 
 ```js
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
-import {createPopUp} from "./components/marker.js";
+import {createMap} from "./components/mapUtils.js";
 ```
 ```js
-var northEast = L.latLng(51.6, 6.05),
-    southWest = L.latLng(50.4, 2.5),
-    bounds = L.latLngBounds(southWest, northEast);
+createMap(sites);
 
-var centerLat = (southWest.lat + northEast.lat) / 2;
-var centerLng = (southWest.lng + northEast.lng) / 2;
-
-
-var map = L.map('map', {
-    center: [centerLat, centerLng],
-    bounds: bounds,
-    maxBoundsViscosity: 0.5,
-    zoomControl: false,
-}).setView([centerLat, centerLng], 9);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
-attribution:'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',    subdomains: 'abcd',
-    minZoom: 9
-}).addTo(map);
-
-const markers = [];
-
-// add markers
-sites.forEach((d) => {
-    const marker = L.marker([d.lat, d.long]).addTo(map)
-        .bindPopup(createPopUp(d))
-        .bindTooltip(d.naam);
-    markers.push(marker);
-});
-// fixes bug where tooltips opened by dragging would not close
-map.on('dragend', function(e) {
-    markers.forEach((d) => {
-        d.closeTooltip();
-    });
-});
-// fixes bug where tooltips opened by zooming would not close
-map.on('zoomend', function(e) {
-    markers.forEach((d) => {
-        d.closeTooltip();
-    });
-});
-
-function makeSmallerBounds(bounds, shrinkAmount) {
-    var northEast = bounds.getNorthEast();
-    var southWest = bounds.getSouthWest();
-
-    var smallerNorthEast = L.latLng(northEast.lat - shrinkAmount, northEast.lng - shrinkAmount);
-    var smallerSouthWest = L.latLng(southWest.lat + shrinkAmount, southWest.lng + shrinkAmount);
-
-    return L.latLngBounds(smallerSouthWest, smallerNorthEast);
-}
-
-
-/**
- * Returns the point that is within the bounds
-**/
-function limitToBounds(point, bounds) {
-    var lat = Math.max(Math.min(point.lat, bounds.getNorth()), bounds.getSouth());
-    var lng = Math.max(Math.min(point.lng, bounds.getEast()), bounds.getWest());
-    return L.latLng(lat, lng);
-}
-
-function checkBounds() {
-    console.log("checkBounds");
-    var newCenter = map.getCenter();
-    if (!bounds.contains(newCenter)) {
-        newCenter = limitToBounds(newCenter, makeSmallerBounds(bounds, 0.2));
-        map.panTo(newCenter, { animate: true, duration: 1 });
-    }
-}
-
-map.on('moveend', checkBounds);
 ```
 
 

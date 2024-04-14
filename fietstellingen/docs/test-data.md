@@ -14,7 +14,7 @@ import * as Plot from "npm:@observablehq/plot";
 ```
 
 ```js
-import {dailyVolumeChart, tmpDailyVolumeChart} from "./components/dailyVolume.js";
+import {dailyVolumeChart} from "./components/dailyVolume.js";
 ```
 
 ```js
@@ -118,9 +118,9 @@ const m = 20;
 
 
 <div class="grid grid-cols-1">
-  <div class="card">${resize((width) => tmpDailyVolumeChart(IN, IN_TOTAL, {width, m}))}</div>
+  <div class="card">${resize((width) => dailyVolumeChart(IN, IN_TOTAL, {width, m}))}</div>
 </div>
 
 <div class="grid grid-cols-1">
-  <div class="card">${resize((width) => tmpDailyVolumeChart(OUT, OUT_TOTAL, {width, m}))}</div>
+  <div class="card">${resize((width) => dailyVolumeChart(OUT, OUT_TOTAL, {width, m}))}</div>
 </div>

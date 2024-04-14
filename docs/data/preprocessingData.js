@@ -1,7 +1,12 @@
 import {csvFormat, csvParse} from "d3-dsv";
 import {promises as fs} from 'fs';
+import path from 'path';
+import url from 'url';
 
-const filePath = 'docs/data.csv';
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const filePath = __dirname + '/data.csv';
 
 const startDate = ({
     year:2020,

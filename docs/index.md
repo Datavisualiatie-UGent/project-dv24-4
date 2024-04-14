@@ -1,7 +1,5 @@
 ---
 title: Fietstellingen
-toc: false
-theme: dashboard
 ---
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -63,7 +61,7 @@ theme: dashboard
   <h1>Fietstellingen</h1>
 </div>
 
-<div class="center-map">
+<div class="center-map" style="width: 100%">
     <div id="map" style="height: 600px;"></div>
 </div>
 

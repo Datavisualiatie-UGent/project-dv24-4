@@ -1,6 +1,14 @@
 ---
-toc: false
+title: Fietstellingen
 ---
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
 
 <style>
 
@@ -20,9 +28,6 @@ toc: false
   font-size: 14vw;
   font-weight: 900;
   line-height: 1;
-  background: linear-gradient(30deg, var(--theme-foreground-focus), currentColor);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
@@ -42,19 +47,34 @@ toc: false
   }
 }
 
+.center-map {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
 </style>
 <div class="hero">
   <h1>Fietstellingen</h1>
 </div>
 
+<div class="center-map" style="width: 100%">
+    <div id="map" style="height: 600px;"></div>
+</div>
 
 ```js
-let tellingen = FileAttachment("data/data.csv").csv({typed: true});
-let sites = FileAttachment("data/sites.csv").csv({typed: true});
-
 // Imports
+const sites = FileAttachment("data/sites.csv").csv({typed: true});
+let tellingen = FileAttachment("data/data.csv").csv({typed: true});
+const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
+
+import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
 import {overviewYear} from "./components/overviewYear.js";
+```
+
+```js
+createMap(sites);
 ```
 
 ### Overzicht

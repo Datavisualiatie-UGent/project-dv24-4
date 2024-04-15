@@ -53,13 +53,19 @@ title: Fietstellingen
     width: 100%;
 }
 
+.style-map {
+    border-radius: 25px;
+    border: 2px solid lightgray;
+    height: 600px;
+}
+
 </style>
 <div class="hero">
   <h1>Fietstellingen</h1>
 </div>
 
 <div class="center-map" style="width: 100%">
-    <div id="map" style="height: 600px;"></div>
+    <div id="map" class="style-map"></div>
 </div>
 
 ```js

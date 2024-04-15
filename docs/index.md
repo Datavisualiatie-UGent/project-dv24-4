@@ -64,6 +64,7 @@ title: Fietstellingen
   <h1>Fietstellingen</h1>
 </div>
 
+## Meetpunten
 <div class="center-map" style="width: 100%">
     <div id="map" class="style-map"></div>
 </div>
@@ -84,7 +85,18 @@ import {dailyVolumeChart} from "./components/dailyVolume.js";
 createMap(sites);
 ```
 
-### Overzicht
+## Aantal tellingen
+
+```js
+const groupedData = Array.from(d3.group(tellingen, d => d.siteID), ([key, values]) => ({
+  siteID: key,
+  aantal: values.reduce((total, d) => total + d.aantal, 0)
+}));
+```
+
+<div class="grid grid-cols-1">
+  <div class="card">${resize((width) => barChart(groupedData, {width}))}</div>
+</div>
 
 ```js
 const _tmp = Array.from(d3.group(sites, d=>d.gemeente), ([key, values]) => ({
@@ -101,7 +113,7 @@ for(let item of _tmp){
 }
 ```
 
-### Data
+## Gemiddeld aantal tellingen per meetpunt
 
 ```js
 let gemeente = view(Inputs.select(names, {value: "Gent"}))
@@ -190,18 +202,6 @@ const m = 20;
 
 <div class="grid grid-cols-1">
   <div class="card">${resize((width) => dailyVolumeChart(OUT, OUT_TOTAL, {width, m}))}</div>
-</div>
-
-
-```js
-const groupedData = Array.from(d3.group(tellingen, d => d.siteID), ([key, values]) => ({
-  siteID: key,
-  aantal: values.reduce((total, d) => total + d.aantal, 0)
-}));
-```
-
-<div class="grid grid-cols-1">
-  <div class="card">${resize((width) => barChart(groupedData, {width}))}</div>
 </div>
 
 

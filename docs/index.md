@@ -28,9 +28,6 @@ title: Fietstellingen
   font-size: 14vw;
   font-weight: 900;
   line-height: 1;
-  background: linear-gradient(30deg, var(--theme-foreground-focus), currentColor);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
@@ -53,7 +50,7 @@ title: Fietstellingen
 .center-map {
     margin-left: auto;
     margin-right: auto;
-    width: 65%;
+    width: 100%;
 }
 
 </style>
@@ -66,42 +63,54 @@ title: Fietstellingen
 </div>
 
 ```js
+// Imports
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
+let tellingen = FileAttachment("data/data.csv").csv({typed: true});
+const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
+
 import {createMap} from "./components/mapUtils.js";
+import {barChart} from "./components/barChartSiteIDAantal.js";
+import {overviewYear} from "./components/overviewYear.js";
 ```
+
 ```js
 createMap(sites);
-
 ```
 
-
+### Overzicht
 ```js
-const data = FileAttachment("data/data.csv").csv({typed: true});
-import {barChart} from "./components/barChartSiteIDAantal.js";
-```
-
-```js
-const groupedData = Array.from(d3.group(data, d => d.siteID), ([key, values]) => ({
+const groupedData = Array.from(d3.group(tellingen, d => d.siteID), ([key, values]) => ({
   siteID: key,
   aantal: values.reduce((total, d) => total + d.aantal, 0)
 }));
 ```
 
-### Data
 <div class="grid grid-cols-1">
   <div class="card">${resize((width) => barChart(groupedData, {width}))}</div>
 </div>
 
+
+### Jaaroverzicht
 ```js
-const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
+let all_years = [... new Set(tellingen.map(d => new Date(d.van).getFullYear().toString()))]
+let all_sites = [... new Set(sites.map(d => d.siteID.toString()))]
 ```
 
-### Richtingen
 ```js
-display(richtingen);
+// input fields
+const SelectedYearInput = Inputs.select(all_years)
+const selectedYear = Generators.input(SelectedYearInput)
+const SelectedSiteInput = Inputs.select(all_sites)
+const SelectedSite = Generators.input(SelectedSiteInput)
 ```
 
-### Sites
-```js
-display(sites);
-```
+<div class="card" style="display: flex; gap: 0.5rem;">
+    <div>${SelectedYearInput}</div>
+    <div>${SelectedSiteInput}</div>
+</div>
+
+<div class="grid grid-cols-1">
+  <div class="card">
+    ${resize((width) => overviewYear(tellingen, parseInt(selectedYear), parseInt(SelectedSite), width))}
+  </div>
+</div>

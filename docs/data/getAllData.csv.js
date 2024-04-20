@@ -1,12 +1,5 @@
-import {csvFormat, csvParse} from "d3-dsv";
 import {promises as fs} from 'fs';
-import path from 'path';
-import url from 'url';
 
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const filePath = __dirname + '/data.csv';
 
 const startDate = ({
     year:2020,
@@ -45,8 +38,6 @@ while (year < endDate.year || (year === endDate.year && month <= endDate.month))
     // const dataSet = await text(`https://opendata.apps.mow.vlaanderen.be/fietstellingen/data-${year}-${String(month).padStart(2, '0')}.csv`);
     const dataSet = await readFile(`./dataset/data/data-${year}-${String(month).padStart(2, '0')}.csv`);
 
-    console.log("Loaded data for " + year + "-" + String(month).padStart(2, '0'));
-
     const rows = dataSet.split('\n');
     for (let row of rows) {
         dataCsv.push(row);
@@ -58,8 +49,6 @@ while (year < endDate.year || (year === endDate.year && month <= endDate.month))
     }
 }
 
-console.log(dataCsv.length + " rows loaded");
-
 function filterData(data){
     // remove zero counts
     if (data[5] === "0"){
@@ -70,40 +59,14 @@ function filterData(data){
 
 }
 
-console.log(dataCsv[0]);
 // filter data
 dataCsv = dataCsv.filter((row, index) => {
     const values = row.split(',');
     return filterData(values) || index === 0;
 });
-console.log(dataCsv[0]);
-// map data
+
+// map data to remove FIETSERS is always the same
 //dataCsv = dataCsv.map(row => row.replace(/,FIETSERS,/g, ',,'));
 
-console.log(dataCsv.length + " rows after filtering");
-
-const data = csvParse(dataCsv.join('\n'), (d) => ({
-    siteID: d.siteID,
-    richting: d.richting,
-    // type: d.type,
-    van: d.van,
-    tot: d.tot,
-    aantal: d.aantal
-}));
-
-// TODO add filtering
-
-delete data.columns;
-
-// delete file if exists
-try {
-  await fs.access(filePath, fs.constants.F_OK);
-  await fs.unlink(filePath);
-} catch (error) {
-  // file does not exist
-}
 // write to file
-await fs.writeFile(filePath, csvFormat(data));
-
-
-
+process.stdout.write(dataCsv.join('\n') + "\n");

@@ -71,7 +71,7 @@ title: Fietstellingen
 
 ```js
 // Imports
-const tellingen = FileAttachment("data/data.csv").csv({typed: true});
+const tellingen = FileAttachment("data/getAllData.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 

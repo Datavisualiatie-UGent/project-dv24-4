@@ -8,6 +8,8 @@ title: hist-test
 const tellingen = FileAttachment("data/allData.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
+
+import { calculateMonthsBetween } from './components/historyUtils.js';
 ```
 
 
@@ -24,6 +26,18 @@ for (let [key, values] of d3.group(sites, d => d.gemeente)) {
 
 ```js
 // TODO cumulatieve gemiddelde aantal tellingen voor elke maand
+// per meetpunt en hierover het gemiddelde nemen om te zorgen dat nieuwe meetpunten niet te veel invloed hebben
 
-console.log(siteIDs);
+const sitesInTellingsData = Array.from(new Set(tellingen.map(d => d.siteID)));
+const months = Array.from({length: 12}, (_, i) => new Date(0, i+1, 0).toLocaleString('default', { month: 'long' }));
+
+
+
+const siteTotalCounts = new Map();
+
+// hier uit kan je de index halen en totaal aantal maanden
+const totalMothsCount = calculateMonthsBetween(tellingen[0].van, tellingen[tellingen.length - 1].tot);
+
+
+console.log(totalMothsCount);
 ```

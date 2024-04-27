@@ -74,11 +74,12 @@ title: Fietstellingen
 const tellingen = FileAttachment("data/allData.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
+const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
 
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
 import {overviewYear} from "./components/overviewYear.js";
-import {dailyVolumeChart} from "./components/dailyVolume.js";
+import {dailyVolumeChart, doubleBar} from "./components/dailyVolume.js";
 ```
 
 ```js
@@ -99,18 +100,20 @@ const groupedData = Array.from(d3.group(tellingen, d => d.siteID), ([key, values
 </div>
 
 ```js
-const _tmp = Array.from(d3.group(sites, d=>d.gemeente), ([key, values]) => ({
-  name: key,
-  ids: values.reduce((total, d) => total.concat(d.siteID), [])
-}));
+console.log(sites)
+// const _tmp = Array.from(sites, ([key, values]) => ({
+//   name: key,
+//   ids: values.reduce((total, d) => total.concat(d.siteID), [])
+// }));
 
 const siteIDs = new Map();
 let names = [];
 
-for(let item of _tmp){
-  siteIDs.set(item.name,item.ids);
+for(let item of sites){
+  siteIDs.set(item.name,item.siteID);
   names.push(item.name);
 }
+names = names.sort()
 ```
 
 ## Gemiddeld aantal tellingen per meetpunt
@@ -124,85 +127,37 @@ let ids = siteIDs.get(gemeente) ?? []
 
 
 <h2>${gemeente}</h2>
+<p>${ids}</p>
+
 
 ```js
-const hourLabels = [
-"00:00", 
-"01:00", 
-"02:00", 
-"03:00", 
-"04:00", 
-"05:00", 
-"06:00", 
-"07:00", 
-"08:00", 
-"09:00", 
-"10:00", 
-"11:00", 
-"12:00", 
-"13:00", 
-"14:00", 
-"15:00", 
-"16:00", 
-"17:00", 
-"18:00", 
-"19:00", 
-"20:00", 
-"21:00", 
-"22:00", 
-"23:00", 
-]
-const getLabel = (index) => {
-  // return hourLabels[index]
-  return index.toString().padStart(2, "0")
+function calculateLabel(timeframe){
+  let hour = (Math.floor(timeframe / 4)).toString().padStart(2, "0")
+  let quarter = ["00", "15", "30", "45"][timeframe % 4]
+  return `${hour}:${quarter}`
 }
-const filterFunction = (d) => {
-  let date = new Date(d.van)
-  return date.getUTCHours() * 4 + date.getUTCMinutes() / 15;
-}
-let IN = []
-let IN_TOTAL = Array.from(d3.group(tellingen, filterFunction), ([key, values]) => {
-  let v= values.filter(elem => elem.richting == "IN");
-    return ({
-      name: getLabel(key),
-      value: v.reduce((total, d) => total + d.aantal, 0) / v.length
-    })
-  }
-).sort((a,b) => a.name - b.name);
-let OUT = [];
-let OUT_TOTAL = Array.from(d3.group(tellingen, filterFunction), ([key, values]) => {
-  let v= values.filter(elem => elem.richting == "OUT");
-  return ({
-    name: getLabel(key),
-    value: v.reduce((total, d) => total + d.aantal, 0) / v.length
-  })
-}
-).sort((a,b) => a.name - b.name);
-d3.bin().value(filterFunction)(tellingen).forEach((value, index) => {
-  value.forEach((v) => {
-      const item = {timeslot: getLabel(filterFunction(v)), value: v.aantal}
-      if(v.richting === "IN"){
-        if(ids.includes(v.siteID)){
-          IN.push(item)
-        }
-      } else {
-        if(ids.includes(v.siteID)){
-          OUT.push(item)
-        }
-      }
-  })
-});
-const m = 20;
+let data = in_out.filter(item => item.siteID === ids).sort((a,b) => a.timeframe > b.timeframe)
+console.log(data)
+data = data.map(item => {
+  item.timeframe = calculateLabel(item.timeframe)
+  return item
+})
+console.log(data)
 ```
 
 
 <div class="grid grid-cols-1">
-  <div class="card">${resize((width) => dailyVolumeChart(IN, IN_TOTAL, {width, m}))}</div>
+
+  <div class="card">${resize((width) => doubleBar(data, {width}))}</div>
+
 </div>
 
-<div class="grid grid-cols-1">
-  <div class="card">${resize((width) => dailyVolumeChart(OUT, OUT_TOTAL, {width, m}))}</div>
-</div>
+
+[//]: # (<div class="grid grid-cols-1">)
+
+[//]: # (  <div class="card">${resize&#40;&#40;width&#41; => dailyVolumeChart&#40;OUT, OUT_TOTAL, {width, m}&#41;&#41;}</div>)
+
+[//]: # (</div>)
 
 
 ### Jaaroverzicht

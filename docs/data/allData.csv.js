@@ -69,4 +69,10 @@ dataCsv = dataCsv.filter((row, index) => {
 //dataCsv = dataCsv.map(row => row.replace(/,FIETSERS,/g, ',,'));
 
 // write to file
-process.stdout.write(dataCsv.join('\n') + "\n");
+// process.stdout.write(dataCsv.join('\n') + "\n");
+import url from 'url';
+import path from 'path';
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const filePath = __dirname + '/allData.csv';
+await fs.writeFile(filePath, dataCsv.join('\n') + "\n");

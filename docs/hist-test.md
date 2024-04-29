@@ -42,6 +42,16 @@ for (let site of sites) {
     }
 }
 
+const gemeenteActiveSince = new Map();
+for (let [gemeente, sites] of siteIDs) {
+    const firstActiveMonth = d3.min(sites.map(siteID => siteActiveSince.get(siteID)));
+    if (firstActiveMonth < 0) {
+        gemeenteActiveSince.set(gemeente, 0);
+    } else {
+        gemeenteActiveSince.set(gemeente, firstActiveMonth);
+    }
+}
+
 
 const siteTotalCounts = new Map();
 // hier uit kan je de index halen en totaal aantal maanden
@@ -64,20 +74,20 @@ for (let [siteID, counts] of siteTotalCounts) {
     // if the site is not active yet, we don't need to calculate the cumulative average
     if (firstActiveMonth >= cumulativeCounts.length) continue;
     
-    cumulativeCounts[firstActiveMonth] = counts[firstActiveMonth];
+    /*cumulativeCounts[firstActiveMonth] = counts[firstActiveMonth];
     for (let i = firstActiveMonth + 1; i < cumulativeCounts.length; i++) {
         // look at the previous month divided by 2 to get the better trend
         cumulativeCounts[i] = (counts[i] + cumulativeCounts[i - 1])/2;
-    }
+    }*/
     
     // other way to calculate the cumulative average
-    /*for (let i = firstActiveMonth; i < counts.length; i++) {
+    for (let i = firstActiveMonth; i < cumulativeCounts.length; i++) {
         let cumulativeCount = 0;
-        for (let j = 0; j <= i; j++) {
+        for (let j = firstActiveMonth; j <= i; j++) {
             cumulativeCount += counts[j];
         }
         cumulativeCounts[i] = cumulativeCount / (i + 1);
-    }*/
+    }
     siteCumulativeCounts.set(siteID, cumulativeCounts);
 }
 
@@ -110,7 +120,27 @@ for (let [gemeente, sites] of siteIDs) {
     }
 }
 
-console.log(siteIDs);
-console.log(siteCumulativeCounts);
+//console.log(siteIDs);
+//console.log(siteCumulativeCounts);
 console.log(siteCumulativeCountsGemeente);
+
+//normalize the data
+const normalizedSiteCumulativeCountsGemeente = new Map();
+for (let [gemeente, counts] of siteCumulativeCountsGemeente) {
+    let maxCount = d3.min(counts);
+    let minCount = d3.max(counts);
+    for (let index = gemeenteActiveSince.get(gemeente); index < counts.length; index++){
+        if (counts[index] > maxCount) {
+            maxCount = counts[index];
+        }
+        if (counts[index] < minCount) {
+            minCount = counts[index];
+        }
+    }
+    normalizedSiteCumulativeCountsGemeente.set(gemeente, counts.map(d => {
+        if (d === 0) return 0;
+        return (d - minCount) / (maxCount - minCount);
+    } ));
+}
+console.log(normalizedSiteCumulativeCountsGemeente);
 ```

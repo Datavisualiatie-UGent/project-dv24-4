@@ -9,7 +9,7 @@ const tellingen = FileAttachment("data/allData.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 
-import { calculateMonthsBetween } from './components/historyUtils.js';
+import { calculateMonthsBetween, plotNormalizedData } from './components/historyUtils.js';
 ```
 
 
@@ -74,20 +74,20 @@ for (let [siteID, counts] of siteTotalCounts) {
     // if the site is not active yet, we don't need to calculate the cumulative average
     if (firstActiveMonth >= cumulativeCounts.length) continue;
     
-    /*cumulativeCounts[firstActiveMonth] = counts[firstActiveMonth];
+    cumulativeCounts[firstActiveMonth] = counts[firstActiveMonth];
     for (let i = firstActiveMonth + 1; i < cumulativeCounts.length; i++) {
         // look at the previous month divided by 2 to get the better trend
         cumulativeCounts[i] = (counts[i] + cumulativeCounts[i - 1])/2;
-    }*/
+    }
     
     // other way to calculate the cumulative average
-    for (let i = firstActiveMonth; i < cumulativeCounts.length; i++) {
+    /*for (let i = firstActiveMonth; i < cumulativeCounts.length; i++) {
         let cumulativeCount = 0;
         for (let j = firstActiveMonth; j <= i; j++) {
             cumulativeCount += counts[j];
         }
         cumulativeCounts[i] = cumulativeCount / (i + 1);
-    }
+    }*/
     siteCumulativeCounts.set(siteID, cumulativeCounts);
 }
 
@@ -144,3 +144,11 @@ for (let [gemeente, counts] of siteCumulativeCountsGemeente) {
 }
 console.log(normalizedSiteCumulativeCountsGemeente);
 ```
+
+```js
+
+```
+
+<div class="grid grid-cols-1">
+  <div class="card">${resize((width) => plotNormalizedData(normalizedSiteCumulativeCountsGemeente, {width: 800, m: 1}))}</div>
+</div>

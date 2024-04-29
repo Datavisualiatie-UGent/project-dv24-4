@@ -36,7 +36,6 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, {widt
     width: width,
     marks: [
       ...lines,
-      Plot.ruleY([0, m])
     ]
   });
 }

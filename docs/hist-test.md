@@ -32,7 +32,6 @@ const sitesInTellingsData = Array.from(new Set(tellingen.map(d => d.siteID)));
 // + 1 because we want to include the last month
 const totalMothsCount = calculateMonthsBetween(tellingen[0].van, tellingen[tellingen.length - 1].tot) + 1;
 
-console.log(tellingen[0].van, tellingen[tellingen.length - 1].tot, totalMothsCount);
 const siteActiveSince = new Map();
 
 for (let site of sites) {
@@ -56,20 +55,51 @@ for (let [gemeente, sites] of siteIDs) {
 
 
 const siteTotalCounts = new Map();
+const siteTotalCountsDates = new Map();
 // hier uit kan je de index halen en totaal aantal maanden
 
 for (let telling of tellingen) {
     if (!siteTotalCounts.has(telling.siteID)) {
         siteTotalCounts.set(telling.siteID, Array.from({length: totalMothsCount}, () => 0));
+        siteTotalCountsDates.set(telling.siteID, Array.from({length: totalMothsCount}, () => null));
+    }
+    
+    const diffMonth = calculateMonthsBetween(tellingen[0].van, telling.van);
+    
+    const siteCountsDate = siteTotalCountsDates.get(telling.siteID);
+    
+    if (siteCountsDate[diffMonth] === null) {
+        siteCountsDate[diffMonth] = new Date(telling.van);
     }
     
     let siteCounts = siteTotalCounts.get(telling.siteID);
-    siteCounts[calculateMonthsBetween(tellingen[0].van, telling.tot)] += telling.aantal;
+    siteCounts[diffMonth] += telling.aantal;
+    
+    if (siteCountsDate[diffMonth] > new Date(telling.van)){
+        siteCountsDate[diffMonth] = new Date(telling.van);
+    }
 }
 
+function getDaysInMonth(month, year) {
+    return new Date(year, month + 1, 0).getDate();
+}
+
+const siteTotalCountsMeanPerMonth = new Map();
+for (let [siteID, counts] of siteTotalCounts) {
+    siteTotalCountsMeanPerMonth.set(siteID, Array.from({length: totalMothsCount}, () => 0));
+    
+    const siteCountsDate = siteTotalCountsDates.get(siteID);
+    
+    for (let i = 0; i < counts.length; i++) {
+        
+        if (siteCountsDate[i] === null) continue;
+        
+        siteTotalCountsMeanPerMonth.get(siteID)[i] = counts[i] / getDaysInMonth(siteCountsDate[i].getMonth(), siteCountsDate[i].getFullYear())
+    }
+}
 
 const siteCumulativeCounts = new Map();
-for (let [siteID, counts] of siteTotalCounts) {
+for (let [siteID, counts] of siteTotalCountsMeanPerMonth) {
     let cumulativeCounts = Array.from({length: totalMothsCount}, () => 0);
     
     const firstActiveMonth = siteActiveSince.get(siteID);

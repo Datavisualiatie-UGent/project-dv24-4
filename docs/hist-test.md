@@ -29,8 +29,10 @@ for (let [key, values] of d3.group(sites, d => d.gemeente)) {
 // per meetpunt en hierover het gemiddelde nemen om te zorgen dat nieuwe meetpunten niet te veel invloed hebben
 
 const sitesInTellingsData = Array.from(new Set(tellingen.map(d => d.siteID)));
-//const months = Array.from({length: 12}, (_, i) => new Date(0, i+1, 0).toLocaleString('default', { month: 'long' }));
-const totalMothsCount = calculateMonthsBetween(tellingen[0].van, tellingen[tellingen.length - 1].tot);
+// + 1 because we want to include the last month
+const totalMothsCount = calculateMonthsBetween(tellingen[0].van, tellingen[tellingen.length - 1].tot) + 1;
+
+console.log(tellingen[0].van, tellingen[tellingen.length - 1].tot, totalMothsCount);
 const siteActiveSince = new Map();
 
 for (let site of sites) {
@@ -141,6 +143,7 @@ let iterator = normalizedSiteCumulativeCountsGemeente.entries();
 let compare = new Map();
 compare.set(...iterator.next().value);
 compare.set(...iterator.next().value);
+compare.set(...iterator.next().value);
 
 //console.log(compare);
 ```
@@ -150,5 +153,5 @@ compare.set(...iterator.next().value);
 ```
 
 <div class="grid grid-cols-1">
-  <div class="card">${resize((width) => plotNormalizedData(compare, {width: 800, m: 1}))}</div>
+  <div class="card">${resize((width) => plotNormalizedData(compare, tellingen[0].van, {width: width}))}</div>
 </div>

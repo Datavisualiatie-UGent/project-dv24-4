@@ -122,7 +122,7 @@ for (let [gemeente, sites] of siteIDs) {
 
 //console.log(siteIDs);
 //console.log(siteCumulativeCounts);
-console.log(siteCumulativeCountsGemeente);
+//console.log(siteCumulativeCountsGemeente);
 
 //normalize the data
 const normalizedSiteCumulativeCountsGemeente = new Map();
@@ -131,11 +131,18 @@ for (let [gemeente, counts] of siteCumulativeCountsGemeente) {
     
     normalizedSiteCumulativeCountsGemeente.set(gemeente, counts.map(d => {
         if (d === 0) return 0;
-        let percentageChange = ((d - firstCount) / firstCount) * 100;
+        let percentageChange = ((d - firstCount) / firstCount);
         return percentageChange;
     }));
 }
-console.log(normalizedSiteCumulativeCountsGemeente);
+
+let iterator = normalizedSiteCumulativeCountsGemeente.entries();
+
+let compare = new Map();
+compare.set(...iterator.next().value);
+compare.set(...iterator.next().value);
+
+//console.log(compare);
 ```
 
 ```js
@@ -143,5 +150,5 @@ console.log(normalizedSiteCumulativeCountsGemeente);
 ```
 
 <div class="grid grid-cols-1">
-  <div class="card">${resize((width) => plotNormalizedData(normalizedSiteCumulativeCountsGemeente, {width: 800, m: 1}))}</div>
+  <div class="card">${resize((width) => plotNormalizedData(compare, {width: 800, m: 1}))}</div>
 </div>

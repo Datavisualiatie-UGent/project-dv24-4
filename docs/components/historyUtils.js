@@ -19,23 +19,37 @@ export function calculateMonthsBetween(date1, date2) {
 
 export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, {width, m} = {}) {
 
-  const colors = d3.schemeCategory10;
+    const colors = d3.schemeCategory10;
 
 
-  const lines = Array.from(normalizedSiteCumulativeCountsGemeente.entries()).map(([gemeente, counts], i) => {
-    const data = counts.map((value, timeslot) => ({ timeslot, value, gemeente }));
-    return Plot.line(data, {
-      x: "timeslot",
-      y: "value",
-      stroke: colors[i % colors.length],
-      title: "gemeente",
+    const lines = Array.from(normalizedSiteCumulativeCountsGemeente.entries()).map(([gemeente, counts], i) => {
+        const data = counts.map((value, timeslot) => ({timeslot, value, gemeente}));
+        return Plot.lineY(data, {
+            x: "timeslot",
+            y: "value",
+            stroke: colors[i % colors.length],
+            title: "gemeente",
+        });
     });
-  });
 
-  return Plot.plot({
-    width: width,
-    marks: [
-      ...lines,
-    ]
-  });
+    const minY = d3.min(lines, line => d3.min(line.data, d => d.value));
+    const maxY = d3.max(lines, line => d3.max(line.data, d => d.value));
+
+    const minX = d3.min(lines, line => d3.min(line.data, d => d.timeslot));
+    const maxX = d3.max(lines, line => d3.max(line.data, d => d.timeslot));
+
+    const stepSize = 0.1;  // Pas dit aan aan uw behoeften
+    const ticks = Math.ceil((maxY - minY) / stepSize);
+
+    return Plot.plot({
+        width: width,
+        y: {
+            percent: true, grid: true,
+            ticks: ticks
+        },
+        x: {ticks: Math.ceil(maxX) - Math.floor(minX)},
+        marks: [
+            ...lines,
+        ]
+    });
 }

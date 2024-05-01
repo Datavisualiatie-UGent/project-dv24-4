@@ -170,10 +170,9 @@ for (let [gemeente, counts] of siteCumulativeCountsGemeente) {
 
 let iterator = normalizedSiteCumulativeCountsGemeente.entries();
 
-let compare = new Map();
-compare.set(...iterator.next().value);
-compare.set(...iterator.next().value);
-compare.set(...iterator.next().value);
+console.log(normalizedSiteCumulativeCountsGemeente)
+
+let compare = new Map(Array.from(normalizedSiteCumulativeCountsGemeente).filter(([key, value]) => key === "Bree" || key === "Machelen"));
 
 //console.log(compare);
 ```
@@ -183,5 +182,5 @@ compare.set(...iterator.next().value);
 ```
 
 <div class="grid grid-cols-1">
-  <div class="card">${resize((width) => plotNormalizedData(compare, tellingen[0].van, {width: width}))}</div>
+  <div class="card">${resize((width) => plotNormalizedData(compare, tellingen[0].van, gemeenteActiveSince, totalMothsCount, {width: width}))}</div>
 </div>

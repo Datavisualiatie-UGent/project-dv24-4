@@ -25,7 +25,7 @@ export function calculateMonthsBetween(date1, date2) {
  * @returns {string}
  */
 function getMonth(startDate, index) {
-    const monthNames = Array.from({length: 12}, (_, i) => new Date(0, i+1, 0).toLocaleString('default', { month: 'short' }));
+    const monthNames = Array.from({length: 12}, (_, i) => new Date(0, i + 1, 0).toLocaleString('default', {month: 'short'}));
 
     let newDate = new Date(startDate);
 
@@ -33,10 +33,18 @@ function getMonth(startDate, index) {
 
     return monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear();
 }
-export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, startDate, {width} = {}) {
+
+export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, startDate, gemeenteActiveSince, totalMothsCount, {width} = {}) {
 
     const lines = Array.from(normalizedSiteCumulativeCountsGemeente.entries()).map(([gemeente, counts], i) => {
-        const data = counts.map((value, timeslot) => ({timeslot, value, gemeente}));
+        const data = counts.map((value, timeslot) => ({
+            timeslot,
+            value,
+            gemeente
+        })).filter((value, timeslot) => timeslot >= gemeenteActiveSince.get(gemeente))
+
+        console.log([gemeenteActiveSince.get(gemeente), totalMothsCount]);
+
         return Plot.lineY(data, {
             x: "timeslot",
             y: "value",

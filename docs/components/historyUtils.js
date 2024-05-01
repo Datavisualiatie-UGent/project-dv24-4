@@ -66,10 +66,11 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
             ticks: Math.ceil(maxX) - Math.floor(minX),
             label: "Maanden na startdatum",
             tickFormat: (d => getMonth(startDate, d)),
+            grid: true,
         },
         marks: [
             ...lines,
         ],
-        title: "Percentage verandering van tellingen per gemeente vanaf de eerste maand"
+        title: "Gemiddelde Cumulatieve Procentuele Verandering in Tellingen per Gemeente vanaf Maand Eén"
     });
 }

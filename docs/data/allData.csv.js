@@ -69,4 +69,6 @@ dataCsv = dataCsv.filter((row, index) => {
 //dataCsv = dataCsv.map(row => row.replace(/,FIETSERS,/g, ',,'));
 
 // write to file
-process.stdout.write(dataCsv.join('\n') + "\n");
+for (let row of dataCsv) {
+    console.log(row + '\n');
+}

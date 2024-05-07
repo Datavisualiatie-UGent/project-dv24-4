@@ -1,4 +1,5 @@
 import fs from "node:fs/promises"
+import {sites} from "../components/sitesUtiles.js";
 
 const data = (await fs.readFile("./tellingen.csv", "utf8")).split("\n")
 

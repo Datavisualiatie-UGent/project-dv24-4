@@ -70,5 +70,5 @@ dataCsv = dataCsv.filter((row, index) => {
 
 // write to file
 for (let row of dataCsv) {
-    console.log(row + '\n');
+    console.log(row);
 }

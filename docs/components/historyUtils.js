@@ -43,8 +43,6 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
             gemeente
         })).filter((value, timeslot) => timeslot >= gemeenteActiveSince.get(gemeente))
 
-        console.log([gemeenteActiveSince.get(gemeente), totalMothsCount]);
-
         return Plot.lineY(data, {
             x: "timeslot",
             y: "value",

@@ -9,11 +9,15 @@ const tellingen = FileAttachment("data/allData.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 
+const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").json();
+
 import { calculateMonthsBetween, plotNormalizedData } from './components/historyUtils.js';
 ```
 
 
 ```js
+console.log(cumulatieveCounts);
+
 const siteIDs = new Map();
 let names = [];
 
@@ -170,7 +174,7 @@ for (let [gemeente, counts] of siteCumulativeCountsGemeente) {
 
 let iterator = normalizedSiteCumulativeCountsGemeente.entries();
 
-console.log(normalizedSiteCumulativeCountsGemeente)
+//console.log(normalizedSiteCumulativeCountsGemeente)
 
 let compare = new Map(Array.from(normalizedSiteCumulativeCountsGemeente).filter(([key, value]) => key === "Bree" || key === "Machelen"));
 

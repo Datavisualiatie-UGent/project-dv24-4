@@ -75,6 +75,7 @@ const tellingen = FileAttachment("data/allData.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
+const dayCount = FileAttachment("data/countData.csv").csv({typed: true})
 
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
@@ -129,6 +130,14 @@ let ids = siteIDs.get(gemeente) ?? []
 <h2>${gemeente}</h2>
 <p>${ids}</p>
 
+```js
+let day_count = {}
+dayCount.forEach(item => {
+    day_count[item.siteID] = item.count
+})
+console.log(day_count);
+```
+
 
 ```js
 function calculateLabel(timeframe){
@@ -138,8 +147,11 @@ function calculateLabel(timeframe){
 }
 let data = in_out.filter(item => item.siteID === ids).sort((a,b) => a.timeframe > b.timeframe)
 console.log(data)
+console.log("==========")
 data = data.map(item => {
   item.timeframe = calculateLabel(item.timeframe)
+  item.in = item.in / day_count[ids];
+  item.out = item.out / day_count[ids];
   return item
 })
 console.log(data)

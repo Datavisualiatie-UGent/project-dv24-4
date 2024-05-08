@@ -121,12 +121,12 @@ DATA = DATA.flatMap(item => {
 
 // write to file
 // process.stdout.write(dataCsv.join('\n') + "\n");
-// import url from 'url';
-// import path from 'path';
-// import * as d3 from "../.observablehq/cache/_npm/d3-array@3.2.4/_esm.js";
-//
-// const __filename = url.fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-// const filePath = __dirname + '/inOutData.csv';
-// await fs.writeFile(filePath, "timeframe,siteID,in,out\n" + DATA.join('\n') + "\n");
-process.stdout.write("timeframe,siteID,in,out\n" + DATA.join('\n') + "\n");
+import url from 'url';
+import path from 'path';
+import * as d3 from "../.observablehq/cache/_npm/d3-array@3.2.4/_esm.js";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const filePath = __dirname + '/inOutData.csv';
+await fs.writeFile(filePath, "timeframe,siteID,in,out\n" + DATA.join('\n') + "\n");
+//process.stdout.write("timeframe,siteID,in,out\n" + DATA.join('\n') + "\n");

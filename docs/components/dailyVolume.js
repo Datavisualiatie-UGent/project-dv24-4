@@ -34,11 +34,11 @@ export function doubleBar(data, {width}) {
       Plot.axisX({anchor: "bottom", label: "aantal fietsers"}),
       Plot.barX(
         data,
-        Plot.groupY({x: "sum"}, {x: "in", y: "timeframe", fill: (d) => Math.sign(d.in)}),
+        Plot.groupY({x: "mean"}, {x: "in", y: "timeframe", fill: (d) => Math.sign(d.in)}),
       ),
       Plot.barX(
         data,
-        Plot.groupY({x: "sum"}, {x: "out", y: "timeframe", fill: (d) => Math.sign(d.out)})
+        Plot.groupY({x: "mean"}, {x: "out", y: "timeframe", fill: (d) => Math.sign(d.out)})
       ),
       Plot.ruleX([0]),
       Plot.tip(data, Plot.pointer({

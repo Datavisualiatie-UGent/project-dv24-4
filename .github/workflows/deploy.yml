@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [deploy_workflow]
+    branches: [master]
 
 permissions:
   contents: read

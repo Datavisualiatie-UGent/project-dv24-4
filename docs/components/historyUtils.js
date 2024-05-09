@@ -55,6 +55,8 @@ function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, 
             let devide = 0;
             for (let site of sites) {
                 if (siteActiveSince.get(site) <= index) {
+                    // if the site has no counts we don't want to include it
+                    if (siteCumulativeCounts.get(site) === undefined) continue;
                     total += siteCumulativeCounts.get(site)[index];
                     devide++;
                 }
@@ -92,7 +94,7 @@ export function getResult(header, tellingen, siteIDs,sites) {
 
 
     // + 1 because we want to include the last month
-    const totalMothsCount = calculateMonthsBetween(getElement(tellingen[0], "van"), getElement(tellingen[tellingen.length - 1], "tot")) + 1;
+    const totalMothsCount = calculateMonthsBetween(getElement(tellingen[0], "van"), getElement(tellingen[tellingen.length - 1], "van")) + 1;
 
 
     const siteActiveSince = new Map();

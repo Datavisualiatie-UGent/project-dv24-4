@@ -1,5 +1,5 @@
-import * as Plot from "npm:@observablehq/plot";
-import * as d3 from "npm:d3";
+import * as d3 from "d3";
+
 
 /**
  * This function calculates the number of months between two dates.
@@ -18,65 +18,152 @@ export function calculateMonthsBetween(date1, date2) {
 }
 
 
-/**
- * This function calculates the month when adding an index to a start date.
- * @param startDate
- * @param index
- * @returns {string}
- */
-function getMonth(startDate, index) {
-    const monthNames = Array.from({length: 12}, (_, i) => new Date(0, i + 1, 0).toLocaleString('default', {month: 'short'}));
+function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, totalMothsCount, siteActiveSince, gemeenteActiveSince, siteIDs) {
+    const siteCumulativeCounts = new Map();
+    for (let [siteID, counts] of siteTotalCountsMeanPerMonth) {
+        let cumulativeCounts = Array.from({length: totalMothsCount}, () => 0);
 
-    let newDate = new Date(startDate);
+        const firstActiveMonth = siteActiveSince.get(siteID);
+        // if the site is not active yet, we don't need to calculate the cumulative average
+        if (firstActiveMonth >= cumulativeCounts.length) continue;
 
-    newDate.setMonth(newDate.getMonth() + index);
+        cumulativeCounts[firstActiveMonth] = counts[firstActiveMonth];
+        for (let i = firstActiveMonth + 1; i < cumulativeCounts.length; i++) {
+            // look at the previous month divided by 2 to get the better trend
+            cumulativeCounts[i] = (counts[i] + cumulativeCounts[i - 1]) / 2;
+        }
 
-    return monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear();
+        // other way to calculate the cumulative average
+        /*for (let i = firstActiveMonth; i < cumulativeCounts.length; i++) {
+            let cumulativeCount = 0;
+            for (let j = firstActiveMonth; j <= i; j++) {
+                cumulativeCount += counts[j];
+            }
+            cumulativeCounts[i] = cumulativeCount / (i + 1);
+        }*/
+        siteCumulativeCounts.set(siteID, cumulativeCounts);
+    }
+
+
+    const siteCumulativeCountsGemeente = new Map();
+    for (let [gemeente, sites] of siteIDs) {
+
+        let gemeenteCounts = Array.from({length: totalMothsCount}, () => 0)
+
+        for (let index = 0; index < gemeenteCounts.length; index++) {
+            let total = 0;
+            let devide = 0;
+            for (let site of sites) {
+                if (siteActiveSince.get(site) <= index) {
+                    total += siteCumulativeCounts.get(site)[index];
+                    devide++;
+                }
+            }
+            if (devide !== 0) {
+                gemeenteCounts[index] = total / devide;
+            } else {
+                gemeenteCounts[index] = 0;
+            }
+        }
+        if (gemeenteCounts.some(count => count > 0)) {
+            siteCumulativeCountsGemeente.set(gemeente, gemeenteCounts);
+        }
+    }
+
+    const normalizedSiteCumulativeCountsGemeente = new Map();
+    for (let [gemeente, counts] of siteCumulativeCountsGemeente) {
+        const firstCount = counts[gemeenteActiveSince.get(gemeente)];
+
+        normalizedSiteCumulativeCountsGemeente.set(gemeente, counts.map(d => {
+            if (d === 0) return 0;
+            let percentageChange = ((d - firstCount) / firstCount);
+            return percentageChange;
+        }));
+    }
+    return normalizedSiteCumulativeCountsGemeente;
 }
 
-export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, startDate, gemeenteActiveSince, totalMothsCount, {width} = {}) {
 
-    const lines = Array.from(normalizedSiteCumulativeCountsGemeente.entries()).map(([gemeente, counts], i) => {
-        const data = counts.map((value, timeslot) => ({
-            timeslot,
-            value,
-            gemeente
-        })).filter((value, timeslot) => timeslot >= gemeenteActiveSince.get(gemeente))
+export function getResult(header, tellingen, siteIDs,sites) {
 
-        return Plot.lineY(data, {
-            x: "timeslot",
-            y: "value",
-            stroke: "gemeente",
-        });
-    });
+    function getElement(row, nameRow) {
+        return row.split(",")[header.indexOf(nameRow)];
+    }
 
-    const minY = d3.min(lines, line => d3.min(line.data, d => d.value));
-    const maxY = d3.max(lines, line => d3.max(line.data, d => d.value));
 
-    const minX = d3.min(lines, line => d3.min(line.data, d => d.timeslot));
-    const maxX = d3.max(lines, line => d3.max(line.data, d => d.timeslot));
+    // + 1 because we want to include the last month
+    const totalMothsCount = calculateMonthsBetween(getElement(tellingen[0], "van"), getElement(tellingen[tellingen.length - 1], "tot")) + 1;
 
-    const stepSize = 0.1;  // Pas dit aan aan uw behoeften
-    const ticks = Math.ceil((maxY - minY) / stepSize);
 
-    return Plot.plot({
-        width: width,
-        color: {legend: true},
-        y: {
-            percent: true,
-            grid: true,
-            ticks: ticks,
-            label: "Percentage (%)",
-        },
-        x: {
-            ticks: Math.ceil(maxX) - Math.floor(minX),
-            label: "Maanden na startdatum",
-            tickFormat: (d => getMonth(startDate, d)),
-            grid: true,
-        },
-        marks: [
-            ...lines,
-        ],
-        title: "Gemiddelde Cumulatieve Procentuele Verandering in Tellingen per Gemeente vanaf Maand Eén"
-    });
+    const siteActiveSince = new Map();
+    for (let site of sites) {
+        const monthsBetween = calculateMonthsBetween(getElement(tellingen[0], "van"), site.datum_van);
+        if (monthsBetween < 0) {
+            siteActiveSince.set(site.siteID, 0);
+        } else {
+            siteActiveSince.set(site.siteID, monthsBetween);
+        }
+    }
+
+    const gemeenteActiveSince = new Map();
+    for (let [gemeente, sites] of siteIDs) {
+        const firstActiveMonth = d3.min(sites.map(siteID => siteActiveSince.get(siteID)));
+        if (firstActiveMonth < 0) {
+            gemeenteActiveSince.set(gemeente, 0);
+        } else {
+            gemeenteActiveSince.set(gemeente, firstActiveMonth);
+        }
+    }
+
+
+    const siteTotalCounts = new Map();
+    const siteTotalCountsDates = new Map();
+// hier uit kan je de index halen en totaal aantal maanden
+
+    for (let telling of tellingen) {
+        if (!siteTotalCounts.has(getElement(telling, "siteID"))) {
+            siteTotalCounts.set(getElement(telling, "siteID"), Array.from({length: totalMothsCount}, () => 0));
+            siteTotalCountsDates.set(getElement(telling, "siteID"), Array.from({length: totalMothsCount}, () => null));
+        }
+
+        const diffMonth = calculateMonthsBetween(getElement(tellingen[0], "van"), getElement(telling, "van"));
+
+        const siteCountsDate = siteTotalCountsDates.get(getElement(telling, "siteID"));
+
+        if (siteCountsDate[diffMonth] === null) {
+            siteCountsDate[diffMonth] = new Date(getElement(telling, "van"));
+        }
+
+        let siteCounts = siteTotalCounts.get(getElement(telling, "siteID"));
+        siteCounts[diffMonth] += Number(getElement(telling, "aantal"));
+
+        if (siteCountsDate[diffMonth] > new Date(getElement(telling, "van"))) {
+            siteCountsDate[diffMonth] = new Date(getElement(telling, "van"));
+        }
+    }
+
+    function getDaysInMonth(month, year) {
+        return new Date(year, month + 1, 0).getDate();
+    }
+
+    let siteTotalCountsMeanPerMonth = new Map();
+    for (let [siteID, counts] of siteTotalCounts) {
+        siteTotalCountsMeanPerMonth.set(siteID, Array.from({length: totalMothsCount}, () => 0));
+
+        const siteCountsDate = siteTotalCountsDates.get(siteID);
+
+        for (let i = 0; i < counts.length; i++) {
+
+            if (siteCountsDate[i] === null) continue;
+
+            siteTotalCountsMeanPerMonth.get(siteID)[i] = counts[i] / getDaysInMonth(siteCountsDate[i].getMonth(), siteCountsDate[i].getFullYear())
+        }
+    }
+
+    return {
+        normalizedSiteCumulativeCountsGemeente: Object.fromEntries(getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, totalMothsCount, siteActiveSince, gemeenteActiveSince, siteIDs)),
+        totalMothsCount: totalMothsCount,
+        gemeenteActiveSince: Object.fromEntries(gemeenteActiveSince),
+        startDate: getElement(tellingen[0], "van"),
+    }
 }

@@ -1,10 +1,15 @@
 import fs from "node:fs/promises"
 import {sites} from "../components/sitesUtiles.js";
 import * as d3 from "d3";
+import {getResult,} from "../components/historyUtils.js";
 
+//const data = (await fs.readFile("./tellingen.csv", "utf8")).split("\n")
 const data = (await fs.readFile("./docs/data/tellingen.csv", "utf8")).split("\n")
 
+
 const header = data[0].split(",")
+
+
 
 const tellingen = data.slice(1, -1);
 
@@ -30,6 +35,12 @@ for (let [key, values] of d3.group(sites, d => d.gemeente)) {
   names.push(key);
 }
 
+
+const resultJSON = {};
+for (let [year, data] of Object.entries(years)) {
+    resultJSON[year] = getResult(header, data, siteIDs, sites);
+}
+
 console.log(JSON.stringify({
-    names: names,
-}));
+    resultJSON
+}))

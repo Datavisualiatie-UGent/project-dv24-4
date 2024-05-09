@@ -13,7 +13,8 @@ const grouped = d3.group(data, d => d.siteID)
 const new_map = new Map();
 grouped.forEach((value, key) => {
         const r = d3.rollups(value, v => d3.sum(v, d => d.aantal), d => {
-            return new Date(d.van).toISOString().slice(0, 10);
+            const date = new Date(d.van)
+            return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
         })
 
         new_map.set(key, r)

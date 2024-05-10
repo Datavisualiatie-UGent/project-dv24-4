@@ -44,7 +44,7 @@ logStream.write("siteID,richting,van,tot,aantal\n");
 function filterRows(data){
     // remove zero counts
     const row = data.split(',');
-    if (row[5] === "0"){
+    if (row[5] === "0" || row[5] === ""){
         return false;
     } else if (row[2] !== "FIETSERS") {
         return false;

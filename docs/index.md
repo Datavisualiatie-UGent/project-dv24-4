@@ -76,7 +76,9 @@ const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
 const dayCount = FileAttachment("data/countData.csv").csv({typed: true})
+const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true});
 
+import {overviewYear} from "./components/overviewYear.js";
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
 import {overviewYear} from "./components/overviewYear.js";
@@ -164,7 +166,7 @@ data = data.map(item => {
 
 ### Jaaroverzicht
 ```js
-let all_years = [... new Set(tellingen.map(d => new Date(d.van).getFullYear().toString()))]
+let all_years = [... new Set(jaaroverzicht.map(d => new Date(d.dag).getFullYear().toString()))]
 let all_sites = [... new Set(sites.map(d => d.siteID.toString()))]
 ```
 
@@ -176,6 +178,7 @@ const SelectedSiteInput = Inputs.select(all_sites)
 const SelectedSite = Generators.input(SelectedSiteInput)
 ```
 
+
 <div class="card" style="display: flex; gap: 0.5rem;">
     <div>${SelectedYearInput}</div>
     <div>${SelectedSiteInput}</div>
@@ -183,6 +186,6 @@ const SelectedSite = Generators.input(SelectedSiteInput)
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => overviewYear(tellingen, parseInt(selectedYear), parseInt(SelectedSite), width))}
+    ${resize((width) => overviewYear(jaaroverzicht, parseInt(selectedYear), parseInt(SelectedSite), width))}
   </div>
 </div>

@@ -71,7 +71,7 @@ title: Fietstellingen
 
 ```js
 // Imports
-const tellingen = FileAttachment("data/tellingen.csv").csv({typed: true});
+const totalCounts = FileAttachment("data/totalCounts.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
@@ -92,15 +92,8 @@ createMap(sites);
 
 ## Aantal tellingen
 
-```js
-const groupedData = Array.from(d3.group(tellingen, d => d.siteID), ([key, values]) => ({
-  siteID: key,
-  aantal: values.reduce((total, d) => total + d.aantal, 0)
-}));
-```
-
 <div class="grid grid-cols-1">
-  <div class="card">${resize((width) => barChart(groupedData, {width}))}</div>
+  <div class="card">${resize((width) => barChart(totalCounts, {width}))}</div>
 </div>
 
 ```js

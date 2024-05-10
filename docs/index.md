@@ -80,7 +80,7 @@ const dayCount = FileAttachment("data/countData.csv").csv({typed: true})
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
 import {overviewYear} from "./components/overviewYear.js";
-import {dailyVolumeChart, doubleBar} from "./components/dailyVolume.js";
+import {doubleBarHorizontal} from "./components/dailyVolume.js";
 ```
 
 ```js
@@ -135,41 +135,31 @@ let day_count = {}
 dayCount.forEach(item => {
     day_count[item.siteID] = item.count
 })
-console.log(day_count);
+// console.log(day_count);
 ```
 
 
 ```js
-function calculateLabel(timeframe){
-  let hour = (Math.floor(timeframe / 4)).toString().padStart(2, "0")
-  let quarter = ["00", "15", "30", "45"][timeframe % 4]
-  return `${hour}:${quarter}`
+function calculateLabel(timeframe) {
+    let hour = (Math.floor(timeframe / 4)).toString().padStart(2, "0")
+    let quarter = ["00", "15", "30", "45"][timeframe % 4]
+    return `${hour}:${quarter}`
 }
-let data = in_out.filter(item => item.siteID === ids).sort((a,b) => a.timeframe > b.timeframe)
-console.log(data)
-console.log("==========")
+let data = in_out.filter(item => item.siteID === ids).sort((a, b) => a.timeframe > b.timeframe)
 data = data.map(item => {
-  item.timeframe = calculateLabel(item.timeframe)
-  item.in = item.in / day_count[ids];
-  item.out = item.out / day_count[ids];
-  return item
+    item.timeframe = new Date(`01 ${calculateLabel(item.timeframe)}:00 UTC`)
+    item.in = item.in / day_count[ids];
+    item.out = item.out / day_count[ids];
+    return item
 })
-console.log(data)
 ```
 
 
 <div class="grid grid-cols-1">
 
-  <div class="card">${resize((width) => doubleBar(data, {width}))}</div>
+  <div class="card">${resize((width) => doubleBarHorizontal(data, {width}))}</div>
 
 </div>
-
-
-[//]: # (<div class="grid grid-cols-1">)
-
-[//]: # (  <div class="card">${resize&#40;&#40;width&#41; => dailyVolumeChart&#40;OUT, OUT_TOTAL, {width, m}&#41;&#41;}</div>)
-
-[//]: # (</div>)
 
 
 ### Jaaroverzicht

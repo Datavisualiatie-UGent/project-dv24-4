@@ -1,58 +1,56 @@
 import * as Plot from "npm:@observablehq/plot";
 
-export function dailyVolumeChart(data, total, {width, m} = {}) {
-  return Plot.plot({
-    width: width,
-    marks: [
-      Plot.barY(
-      data,
-      Plot.groupX({y: "mean"}, {x: "timeslot", y: "value", tip: true})
-      ),
-      Plot.line(
-      total,
-      {x: "name", y: "value", stroke: "#0000ff", tip: true}
-      // Plot.groupX({y: "mean"}, {x: "timeslot", stroke: "#0000ff", y: "value", tip: true})
-      ),
-      Plot.ruleY([0, m])
-    ]
-  })
+function calculateLabel(timeframe) {
+    let hour = timeframe.getUTCHours().toString().padStart(2, "0")
+    let quarter = ["00", "15", "30", "45"][Math.floor(timeframe.getUTCMinutes() / 15)]
+    return `${hour}:${quarter}`
 }
 
-export function doubleBar(data, {width}) {
-  return Plot.plot({
-    width: width,
-    x: {grid: true},
-    marginRight: 20,
-    marginBottom: 20,
-    marginLeft: 50,
-    color: {
-      scheme: "PiYg",
-      type: "ordinal"
-    },
-    marks: [
-      Plot.axisX({anchor: "top", label: "aantal fietsers"}),
-      Plot.axisX({anchor: "bottom", label: "aantal fietsers"}),
-      Plot.barX(
-        data,
-        Plot.groupY({x: "mean"}, {x: "in", y: "timeframe", fill: (d) => Math.sign(d.in)}),
-      ),
-      Plot.barX(
-        data,
-        Plot.groupY({x: "mean"}, {x: "out", y: "timeframe", fill: (d) => Math.sign(d.out)})
-      ),
-      Plot.ruleX([0]),
-      Plot.tip(data, Plot.pointer({
-        x: "out",
-        y: "timeframe",
-        title: (d) => [`Hour: ${d.timeframe}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
-        fill: (d) => Math.sign(d.in)
-      })),
-      Plot.tip(data, Plot.pointer({
-        x: "in",
-        y: "timeframe",
-        title: (d) => [`Hour: ${d.timeframe}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
-        fill: (d) => Math.sign(d.in)
-      })),
-    ]
-  })
+export function doubleBarHorizontal(data, {width}) {
+    return Plot.plot({
+        width: width,
+        y: {grid: true},
+        x: {
+            label: null,
+            tickFormat: (x) => {
+                let minutes = x.getUTCMinutes()
+                if(minutes === 0){
+                    return `${x.getUTCHours().toString().padStart(2, "0")}:00`
+                }
+                return ""
+            },
+            type:"band"
+        },
+        marginRight: 20,
+        marginBottom: 20,
+        marginLeft: 50,
+        color: {
+            scheme: "PiYg",
+            type: "ordinal"
+        },
+        marks: [
+            Plot.axisY({anchor: "left", label: "aantal fietsers"}),
+            Plot.rectY(
+                data,
+                {y: "in", x: "timeframe", fill: (d) => Math.sign(d.in)},
+            ),
+            Plot.rectY(
+                data,
+                {y: "out", x: "timeframe", fill: (d) => Math.sign(d.out)}
+            ),
+            Plot.ruleY([0]),
+            Plot.tip(data, Plot.pointer({
+                y: "out",
+                x: "timeframe",
+                title: (d) => [`Hour: ${calculateLabel(d.timeframe)}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
+                fill: (d) => Math.sign(d.in)
+            })),
+            Plot.tip(data, Plot.pointer({
+                y: "in",
+                x: "timeframe",
+                title: (d) => [`Hour: ${calculateLabel(d.timeframe)}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
+                fill: (d) => Math.sign(d.in)
+            })),
+        ]
+    })
 }

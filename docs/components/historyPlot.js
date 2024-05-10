@@ -62,7 +62,7 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
         },
         x: {
             ticks: Math.ceil(maxX) - Math.floor(minX),
-            label: "Maanden na startdatum",
+            label: "Maanden",
             tickFormat: (d => getMonth(startDate, d)),
             grid: true,
         },

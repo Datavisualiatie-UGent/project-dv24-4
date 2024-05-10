@@ -17,6 +17,35 @@ export function calculateMonthsBetween(date1, date2) {
     return years * 12 + months;
 }
 
+/**
+ * This function normalizes the counts by the first count.
+ * @param counts
+ * @param firstCount
+ * @returns {*}
+ */
+function normalizeCounts(counts, firstCount) {
+    return counts.map(d => {
+        if (d === 0) return 0;
+        let percentageChange = ((d - firstCount) / firstCount);
+        return percentageChange;
+    });
+}
+
+/**
+ * This function generates the normalized counts.
+ * @param siteCumulativeCountsGemeente
+ * @param gemeenteActiveSince
+ * @returns {Map<any, any>}
+ */
+function generateNormalizedCounts(siteCumulativeCountsGemeente, gemeenteActiveSince) {
+    const normalizedSiteCumulativeCountsGemeente = new Map();
+    for (let [gemeente, counts] of siteCumulativeCountsGemeente) {
+        const firstCount = counts[gemeenteActiveSince.get(gemeente)];
+        normalizedSiteCumulativeCountsGemeente.set(gemeente, normalizeCounts(counts, firstCount));
+    }
+    return normalizedSiteCumulativeCountsGemeente;
+}
+
 
 function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, totalMothsCount, siteActiveSince, gemeenteActiveSince, siteIDs) {
     const siteCumulativeCounts = new Map();
@@ -72,17 +101,8 @@ function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, 
         }
     }
 
-    const normalizedSiteCumulativeCountsGemeente = new Map();
-    for (let [gemeente, counts] of siteCumulativeCountsGemeente) {
-        const firstCount = counts[gemeenteActiveSince.get(gemeente)];
-
-        normalizedSiteCumulativeCountsGemeente.set(gemeente, counts.map(d => {
-            if (d === 0) return 0;
-            let percentageChange = ((d - firstCount) / firstCount);
-            return percentageChange;
-        }));
-    }
-    return normalizedSiteCumulativeCountsGemeente;
+    // normalizedSiteCumulativeCountsGemeente
+    return generateNormalizedCounts(siteCumulativeCountsGemeente, gemeenteActiveSince);
 }
 
 

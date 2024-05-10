@@ -82,3 +82,58 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
         title: "Gemiddelde Cumulatieve Procentuele Verandering in Tellingen per Gemeente vanaf Maand Eén"
     });
 }
+
+
+/**
+ * this function gets the trend compare data.
+ * @param cumulatieveCounts
+ * @param year
+ * @param firstTrend
+ * @param secondTrend
+ * @returns {{filteredObj: {[p: string]: *}, totalMothsCount: (*|number), gemeenteActiveSince: (*|{[p: string]: any}), startDate: *}}
+ */
+export function getTrendCompareData(cumulatieveCounts, year, firstTrend, secondTrend) {
+    const startDate = cumulatieveCounts.resultJSON[year].startDate;
+    const gemeenteActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince;
+    const totalMothsCount = cumulatieveCounts.resultJSON[year].totalMothsCount;
+    const compare = cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCountsGemeente
+
+    const filteredObj = Object.fromEntries(
+        Object.entries(compare).filter(([key, value]) => (key === firstTrend || key === secondTrend))
+    );
+
+    return {
+        filteredObj,
+        startDate,
+        gemeenteActiveSince,
+        totalMothsCount
+    }
+}
+
+
+/**
+ * This function gets the first and second trend years.
+ * @param cumulatieveCounts
+ * @param year
+ * @param firstTrend
+ * @param secondTrend
+ * @returns {{secondTrendActiveSince: *, firstTrendsYears: {}, firstTrendActiveSince: *, secondTrendsYears: {}}}
+ */
+export function getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, secondTrend) {
+    const firstTrendsYears = {}
+    const secondTrendsYears = {}
+    const indexYear = Object.keys(cumulatieveCounts.resultJSON).indexOf(year)
+    for (let i = indexYear; i < Object.keys(cumulatieveCounts.resultJSON).length; i++) {
+        firstTrendsYears[firstTrend + " " + Object.keys(cumulatieveCounts.resultJSON)[i]] = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[firstTrend]
+        secondTrendsYears[secondTrend + " " + Object.keys(cumulatieveCounts.resultJSON)[i]] = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[secondTrend]
+    }
+    const firstTrendActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince[firstTrend]
+    const secondTrendActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince[secondTrend]
+
+    return {
+        firstTrendsYears,
+        secondTrendsYears,
+        firstTrendActiveSince,
+        secondTrendActiveSince
+    }
+}

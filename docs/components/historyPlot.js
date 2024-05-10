@@ -21,19 +21,29 @@ function getMonth(startDate, index) {
  * This function plots the normalized data.
  * @param normalizedSiteCumulativeCountsGemeente object containing per gemeente the normalized the cumulative counts normalized by month 0
  * @param startDate the start date of the data
+ * @param gemeentenActiveSince
  * @param gemeenteActiveSince the date when the gemeente started
  * @param totalMothsCount the total number of months
  * @param width the width of the plot
  * @returns {*}
  */
-export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, startDate, gemeenteActiveSince, totalMothsCount, {width} = {}) {
+export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, startDate, gemeentenActiveSince, totalMothsCount, {width} = {}, gemeenteActiveSince = undefined) {
 
     const lines = Array.from(Object.entries(normalizedSiteCumulativeCountsGemeente)).map(([gemeente, counts], i) => {
-        const data = counts.map((value, timeslot) => ({
-            timeslot,
-            value,
-            gemeente
-        })).filter((value, timeslot) => timeslot >= gemeenteActiveSince[gemeente])
+        let data;
+        if (gemeenteActiveSince === undefined) {
+            data = counts.map((value, timeslot) => ({
+                timeslot,
+                value,
+                gemeente
+            })).filter((value, timeslot) => timeslot >= gemeentenActiveSince[gemeente])
+        } else {
+            data = counts.map((value, timeslot) => ({
+                timeslot,
+                value,
+                gemeente
+            })).filter((value, timeslot) => timeslot >= gemeenteActiveSince)
+        }
 
         return Plot.lineY(data, {
             x: "timeslot",

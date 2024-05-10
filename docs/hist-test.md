@@ -43,8 +43,30 @@ const compare = cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCount
 const filteredObj = Object.fromEntries(
   Object.entries(compare).filter(([key, value]) => (key === firstTrend || key === secondTrend))
 );
+console.log(filteredObj)
 ```
 </div>
 <div class="grid grid-cols-1">
   <div class="card">${resize((width) => plotNormalizedData(filteredObj, startDate, gemeenteActiveSince, totalMothsCount, {width: width}))}</div>
+</div>
+
+```js
+// all years after year for first trend
+const firstTrendsyears = {}
+const secondTrendsyears = {}
+const indexYear = Object.keys(cumulatieveCounts.resultJSON).indexOf(year)
+for (let i = indexYear; i < Object.keys(cumulatieveCounts.resultJSON).length; i++) {
+    firstTrendsyears[firstTrend + " " + Object.keys(cumulatieveCounts.resultJSON)[i]] = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[firstTrend]
+    secondTrendsyears[secondTrend + " " + Object.keys(cumulatieveCounts.resultJSON)[i]] = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[secondTrend]
+}
+const firstTrendActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince[firstTrend]
+const secondTrendActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince[secondTrend]
+```
+
+<div class="grid grid-cols-1">
+  <div class="card">${resize((width) => plotNormalizedData(firstTrendsyears, startDate, gemeenteActiveSince, totalMothsCount, {width: width}, firstTrendActiveSince))}</div>
+</div>
+
+<div class="grid grid-cols-1">
+  <div class="card">${resize((width) => plotNormalizedData(secondTrendsyears, startDate, gemeenteActiveSince, totalMothsCount, {width: width}, secondTrendActiveSince))}</div>
 </div>

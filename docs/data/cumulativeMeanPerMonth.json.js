@@ -1,7 +1,7 @@
 import fs from "node:fs/promises"
-import {sites} from "../components/sitesUtiles.js";
+import {sites} from "./sitesUtils.js";
 import * as d3 from "d3";
-import {getResult,} from "../components/historyUtils.js";
+import {getResult,} from "./historyUtils.js";
 
 
 //const data = (await fs.readFile("./tellingen.csv", "utf8")).split("\n")

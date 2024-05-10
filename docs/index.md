@@ -269,7 +269,6 @@ const compare = cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCount
 const filteredObj = Object.fromEntries(
   Object.entries(compare).filter(([key, value]) => (key === firstTrend || key === secondTrend))
 );
-console.log(filteredObj)
 ```
 </div>
 <div class="grid grid-cols-1">

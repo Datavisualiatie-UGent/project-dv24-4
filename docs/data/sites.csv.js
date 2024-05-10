@@ -1,5 +1,5 @@
 import {csvFormat} from "d3-dsv";
-import {sites} from "./../components/sitesUtiles.js";
+import {sites} from "./sitesUtils.js";
 
 // csv
 process.stdout.write(csvFormat(sites));

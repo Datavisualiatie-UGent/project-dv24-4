@@ -46,13 +46,19 @@ function generateNormalizedCounts(siteCumulativeCountsGemeente, gemeenteActiveSi
     return normalizedSiteCumulativeCountsGemeente;
 }
 
-
-function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, totalMothsCount, siteActiveSince, gemeenteActiveSince, siteIDs) {
-    const siteCumulativeCounts = new Map();
-    for (let [siteID, counts] of siteTotalCountsMeanPerMonth) {
+/**
+ * This function calculates the cumulative counts.
+ * @param siteTotalCountsMeanPerMonthMeanPerGemeente
+ * @param totalMothsCount
+ * @param gemeenteActiveSince
+ * @returns {Map<any, any>}
+ */
+function calculateCumulativeCounts(siteTotalCountsMeanPerMonthMeanPerGemeente, totalMothsCount, gemeenteActiveSince) {
+    const gemeenteCumulativeCounts = new Map();
+    for (let [gemeente, counts] of siteTotalCountsMeanPerMonthMeanPerGemeente) {
         let cumulativeCounts = Array.from({length: totalMothsCount}, () => 0);
 
-        const firstActiveMonth = siteActiveSince.get(siteID);
+        const firstActiveMonth = gemeenteActiveSince.get(gemeente);
         // if the site is not active yet, we don't need to calculate the cumulative average
         if (firstActiveMonth >= cumulativeCounts.length) continue;
 
@@ -70,10 +76,20 @@ function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, 
             }
             cumulativeCounts[i] = cumulativeCount / (i + 1);
         }*/
-        siteCumulativeCounts.set(siteID, cumulativeCounts);
+        gemeenteCumulativeCounts.set(gemeente, cumulativeCounts);
     }
+    return gemeenteCumulativeCounts;
+}
 
-
+/**
+ * This function calculates the gemeente counts.
+ * @param siteCumulativeCounts
+ * @param totalMothsCount
+ * @param siteActiveSince
+ * @param siteIDs
+ * @returns {Map<any, any>}
+ */
+function calculateGemeenteCounts(siteCumulativeCounts, totalMothsCount, siteActiveSince, siteIDs) {
     const siteCumulativeCountsGemeente = new Map();
     for (let [gemeente, sites] of siteIDs) {
 
@@ -100,9 +116,16 @@ function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, 
             siteCumulativeCountsGemeente.set(gemeente, gemeenteCounts);
         }
     }
+    return siteCumulativeCountsGemeente;
+}
 
+
+function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, totalMothsCount, siteActiveSince, gemeenteActiveSince, siteIDs) {
+    // first aggregate the counts per gemeente then calculate the cumulative counts
+    const siteTotalCountsMeanPerMonthMeanPerGemeente = calculateGemeenteCounts(siteTotalCountsMeanPerMonth, totalMothsCount, siteActiveSince, siteIDs);
+    const gemeenteCumulativeCounts = calculateCumulativeCounts(siteTotalCountsMeanPerMonthMeanPerGemeente, totalMothsCount, gemeenteActiveSince);
     // normalizedSiteCumulativeCountsGemeente
-    return generateNormalizedCounts(siteCumulativeCountsGemeente, gemeenteActiveSince);
+    return generateNormalizedCounts(gemeenteCumulativeCounts, gemeenteActiveSince);
 }
 
 

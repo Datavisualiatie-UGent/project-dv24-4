@@ -75,7 +75,6 @@ const totalCounts = FileAttachment("data/totalCounts.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
-const dayCount = FileAttachment("data/countData.csv").csv({typed: true})
 const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true});
 const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").json();
 
@@ -121,27 +120,7 @@ let ids = siteIDs.get(gemeente) ?? []
 <p>${ids}</p>
 
 ```js
-let day_count = {}
-dayCount.forEach(item => {
-    day_count[item.siteID] = item.count
-})
-// console.log(day_count);
-```
-
-
-```js
-function calculateLabel(timeframe) {
-    let hour = (Math.floor(timeframe / 4)).toString().padStart(2, "0")
-    let quarter = ["00", "15", "30", "45"][timeframe % 4]
-    return `${hour}:${quarter}`
-}
-let data = in_out.filter(item => item.siteID === ids).sort((a, b) => a.timeframe > b.timeframe)
-data = data.map(item => {
-    item.timeframe = new Date(`2024-01-01 ${calculateLabel(item.timeframe)}:00 UTC`)
-    item.in = item.in / day_count[ids];
-    item.out = item.out / day_count[ids];
-    return item
-})
+let data = in_out.filter(item => item.siteID === ids).sort((a, b) => new Date(a.timeframe) > new Date(b.timeframe))
 ```
 
 <div class="grid grid-cols-1">

@@ -8,6 +8,14 @@ const __dirname = path.dirname(__filename);
 const filePath = __dirname + '/tellingen.csv';
 const data = d3.csvParse(await fs.readFile(filePath, "utf8"));
 
+// counts
+let counts = new Map(d3.groups(data, d => d.siteID, d=> {
+  const dd = new Date(d.van)
+  return `${dd.getFullYear()}-${dd.getMonth()+1}-${dd.getDate()}`
+}).map(([siteID, counts], _) => {
+  return [parseInt(siteID), counts.length]
+}))
+
 // group data per siteID and per 15 minutes
 let grouped = d3.groups(data, d=> d.siteID, d => {
   const date = new Date(d.van)
@@ -29,10 +37,19 @@ grouped = grouped.map(([siteID, value]) => {
   })]
 })
 
+function calculateLabel(timeframe) {
+  let hour = (Math.floor(timeframe / 4)).toString().padStart(2, "0")
+  let quarter = ["00", "15", "30", "45"][timeframe % 4]
+  return `${hour}:${quarter}`
+}
+
 // Write in csv format
 process.stdout.write("siteID,timeframe,in,out\n");
 for (const [siteID, vvv] of grouped) {
   for (const [timeframe, v] of vvv) {
-    process.stdout.write(`${siteID},${timeframe},${v.in},${v.out}\n`);
+    const tt = new Date(`2024-01-01 ${calculateLabel(timeframe)}:00 UTC`)
+    const ins = v.in / parseInt(siteID);
+    const out = v.out / parseInt(siteID);
+    process.stdout.write(`${siteID},${tt},${ins},${out}\n`);
   }
 }

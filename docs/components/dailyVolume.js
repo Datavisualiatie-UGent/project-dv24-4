@@ -13,9 +13,9 @@ export function doubleBarHorizontal(data, {width}) {
         x: {
             label: null,
             tickFormat: (x) => {
-                let minutes = x.getUTCMinutes()
+                let minutes = new Date(x).getUTCMinutes()
                 if(minutes === 0){
-                    return `${x.getUTCHours().toString().padStart(2, "0")}:00`
+                    return `${new Date(x).getUTCHours().toString().padStart(2, "0")}:00`
                 }
                 return ""
             },
@@ -42,13 +42,13 @@ export function doubleBarHorizontal(data, {width}) {
             Plot.tip(data, Plot.pointer({
                 y: "out",
                 x: "timeframe",
-                title: (d) => [`Hour: ${calculateLabel(d.timeframe)}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
+                title: (d) => [`Hour: ${calculateLabel(new Date(d.timeframe))}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
                 fill: (d) => Math.sign(d.in)
             })),
             Plot.tip(data, Plot.pointer({
                 y: "in",
                 x: "timeframe",
-                title: (d) => [`Hour: ${calculateLabel(d.timeframe)}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
+                title: (d) => [`Hour: ${calculateLabel(new Date(d.timeframe))}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
                 fill: (d) => Math.sign(d.in)
             })),
         ]

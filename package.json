@@ -3,9 +3,9 @@
   "private": true,
   "scripts": {
     "clean": "rimraf docs/.observablehq/cache",
-    "build:mem": "set NODE_OPTIONS=--max_old_space_size=4096 && npm run build",
+    "build:mem": "NODE_OPTIONS=--max_old_space_size=4096 && npm run build",
     "build": "rimraf dist && observable build",
-    "dev:mem": "set NODE_OPTIONS=--max_old_space_size=4096 && npm run dev",
+    "dev:mem": "NODE_OPTIONS=--max_old_space_size=4096 && npm run dev",
     "dev": "observable preview",
     "deploy": "observable deploy",
     "observable": "observable"

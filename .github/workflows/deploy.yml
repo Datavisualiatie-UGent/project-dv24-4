@@ -23,8 +23,8 @@ jobs:
         with:
           node-version: 20
       - run: npm install
-      - run: node docs/data/preprocessingData.js
-      - run: npm run build
+      - run: node docs/data/allFilteredData.js
+      - run: npm run build:mem
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

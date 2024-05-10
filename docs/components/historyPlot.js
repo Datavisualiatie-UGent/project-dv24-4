@@ -5,15 +5,18 @@ import * as d3 from "npm:d3";
  * This function calculates the month when adding an index to a start date.
  * @param startDate
  * @param index
+ * @param withYear
  * @returns {string}
  */
-function getMonth(startDate, index) {
+function getMonth(startDate, index, withYear = true) {
     const monthNames = Array.from({length: 12}, (_, i) => new Date(0, i + 1, 0).toLocaleString('default', {month: 'short'}));
 
     let newDate = new Date(startDate);
 
     newDate.setMonth(newDate.getMonth() + index);
-
+    if (!withYear) {
+        return monthNames[newDate.getMonth()];
+    }
     return monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear();
 }
 
@@ -73,7 +76,10 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
         x: {
             ticks: Math.ceil(maxX) - Math.floor(minX),
             label: "Maanden",
-            tickFormat: (d => getMonth(startDate, d)),
+            tickFormat: (d => {
+                if (gemeenteActiveSince === undefined) return getMonth(startDate, d);
+                else return getMonth(startDate, d, false);
+            }),
             grid: true,
         },
         marks: [

@@ -3,13 +3,16 @@
   "private": true,
   "scripts": {
     "clean": "rimraf docs/.observablehq/cache",
+    "build:mem": "NODE_OPTIONS=--max_old_space_size=4096 && npm run build",
     "build": "rimraf dist && observable build",
+    "dev:mem": "NODE_OPTIONS=--max_old_space_size=4096 && npm run dev",
     "dev": "observable preview",
     "deploy": "observable deploy",
     "observable": "observable"
   },
   "dependencies": {
     "@observablehq/framework": "latest",
+    "d3": "^7.9.0",
     "d3-dsv": "^3.0.1",
     "d3-time-format": "^4.1.0"
   },

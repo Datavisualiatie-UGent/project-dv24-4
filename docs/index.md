@@ -77,7 +77,7 @@ const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true});
 const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").json();
 
-import {overviewYear} from "./components/overviewYear.js";
+import {overviewYearMonth, overviewYearWeekday} from "./components/overviewYear.js";
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
 import {dailyVolumeChart} from "./components/dailyVolume.js";
@@ -211,7 +211,7 @@ const m = 20;
 ### Jaaroverzicht
 ```js
 let all_years = [... new Set(jaaroverzicht.map(d => new Date(d.dag).getFullYear().toString()))]
-let all_sites = [... new Set(sites.map(d => d.siteID.toString()))]
+let all_sites = [... new Set(jaaroverzicht.map(d => d.siteID.toString()))].sort((a, b) => a-b)
 ```
 
 ```js
@@ -230,7 +230,13 @@ const SelectedSite = Generators.input(SelectedSiteInput)
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => overviewYear(jaaroverzicht, parseInt(selectedYear), parseInt(SelectedSite), width))}
+    ${resize((width) => overviewYearMonth(jaaroverzicht, parseInt(selectedYear), parseInt(SelectedSite), width))}
+  </div>
+</div>
+
+<div class="grid grid-cols-1">
+  <div class="card">
+    ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(selectedYear), parseInt(SelectedSite), width))}
   </div>
 </div>
 

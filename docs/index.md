@@ -71,7 +71,7 @@ title: Fietstellingen
 
 ```js
 // Imports
-const tellingen = FileAttachment("data/allData.csv").csv({typed: true});
+const tellingen = FileAttachment("data/tellingen.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
@@ -81,7 +81,6 @@ const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true}
 import {overviewYear} from "./components/overviewYear.js";
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
-import {overviewYear} from "./components/overviewYear.js";
 import {doubleBarHorizontal} from "./components/dailyVolume.js";
 ```
 
@@ -103,18 +102,12 @@ const groupedData = Array.from(d3.group(tellingen, d => d.siteID), ([key, values
 </div>
 
 ```js
-console.log(sites)
-// const _tmp = Array.from(sites, ([key, values]) => ({
-//   name: key,
-//   ids: values.reduce((total, d) => total.concat(d.siteID), [])
-// }));
-
 const siteIDs = new Map();
 let names = [];
 
 for(let item of sites){
-  siteIDs.set(item.name,item.siteID);
-  names.push(item.name);
+  siteIDs.set(item.naam,item.siteID);
+  names.push(item.naam);
 }
 names = names.sort()
 ```
@@ -149,20 +142,18 @@ function calculateLabel(timeframe) {
 }
 let data = in_out.filter(item => item.siteID === ids).sort((a, b) => a.timeframe > b.timeframe)
 data = data.map(item => {
-    item.timeframe = new Date(`01 ${calculateLabel(item.timeframe)}:00 UTC`)
+    item.timeframe = new Date(`2024-01-01 ${calculateLabel(item.timeframe)}:00 UTC`)
     item.in = item.in / day_count[ids];
     item.out = item.out / day_count[ids];
     return item
 })
 ```
 
-
 <div class="grid grid-cols-1">
 
   <div class="card">${resize((width) => doubleBarHorizontal(data, {width}))}</div>
 
 </div>
-
 
 ### Jaaroverzicht
 ```js

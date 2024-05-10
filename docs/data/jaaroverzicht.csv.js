@@ -6,8 +6,8 @@ import url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const filePath = __dirname + '/tellingen.csv';
-
 const data = d3.csvParse(await fs.readFile(filePath, "utf8"));
+
 const grouped = d3.group(data, d => d.siteID)
 
 const new_map = new Map();

@@ -1,4 +1,3 @@
-import {csvFormat, csvParse} from "d3-dsv";
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
@@ -9,7 +8,7 @@ const startDate = ({
 });
 
 const endDate = ({
-    year:2023,
+    year:2021,
     month: 12
 });
 
@@ -19,7 +18,15 @@ const __dirname = path.dirname(__filename);
 
 const filePath = __dirname + '/tellingen.csv';
 
-async function text(url) {
+async function readData(filePath) {
+    try {
+        return fs.readFileSync(filePath, "utf-8");
+    } catch (error) {
+        throw new Error(`readFile failed: ${error}`);
+    }
+}
+
+async function fetchData(url) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`fetch failed: ${response.status}`);
   return response.text();
@@ -49,7 +56,9 @@ while (year < endDate.year || (year === endDate.year && month <= endDate.month))
     console.log(`year:${year} month:${month}`)
     console.log(`\tFetching`)
 
-    const dataSet = await text(`https://opendata.apps.mow.vlaanderen.be/fietstellingen/data-${year}-${String(month).padStart(2, '0')}.csv`);
+
+    const dataSet = await fetchData(`https://opendata.apps.mow.vlaanderen.be/fietstellingen/data-${year}-${String(month).padStart(2, '0')}.csv`);
+    // const dataSet = await readData(`./dataset/data/data-${year}-${String(month).padStart(2, '0')}.csv`);
 
     let rows = dataSet.split('\n');
 

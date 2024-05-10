@@ -18,6 +18,16 @@ export function calculateMonthsBetween(date1, date2) {
 }
 
 /**
+ * This function calculates the number of days in a month.
+ * @param month
+ * @param year
+ * @returns {number}
+ */
+function getDaysInMonth(month, year) {
+    return new Date(year, month + 1, 0).getDate();
+}
+
+/**
  * This function normalizes the counts by the first count.
  * @param counts
  * @param firstCount
@@ -128,8 +138,30 @@ function getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, 
     return generateNormalizedCounts(gemeenteCumulativeCounts, gemeenteActiveSince);
 }
 
+/**
+ * This function calculates the mean per month.
+ * @param siteTotalCounts
+ * @param siteTotalCountsDates
+ * @param totalMothsCount
+ * @returns {Map<any, any>}
+ */
+function calculateSiteTotalCountsMeanPerMonth(siteTotalCounts, siteTotalCountsDates, totalMothsCount) {
+    let siteTotalCountsMeanPerMonth = new Map();
+    for (let [siteID, counts] of siteTotalCounts) {
+        siteTotalCountsMeanPerMonth.set(siteID, Array.from({length: totalMothsCount}, () => 0));
 
-export function getResult(header, tellingen, siteIDs,sites) {
+        const siteCountsDate = siteTotalCountsDates.get(siteID);
+
+        for (let i = 0; i < counts.length; i++) {
+            if (siteCountsDate[i] === null) continue;
+            siteTotalCountsMeanPerMonth.get(siteID)[i] = counts[i] / getDaysInMonth(siteCountsDate[i].getMonth(), siteCountsDate[i].getFullYear())
+        }
+    }
+    return siteTotalCountsMeanPerMonth;
+}
+
+
+export function getResult(header, tellingen, siteIDs, sites) {
 
     function getElement(row, nameRow) {
         return row.split(",")[header.indexOf(nameRow)];
@@ -187,23 +219,7 @@ export function getResult(header, tellingen, siteIDs,sites) {
         }
     }
 
-    function getDaysInMonth(month, year) {
-        return new Date(year, month + 1, 0).getDate();
-    }
-
-    let siteTotalCountsMeanPerMonth = new Map();
-    for (let [siteID, counts] of siteTotalCounts) {
-        siteTotalCountsMeanPerMonth.set(siteID, Array.from({length: totalMothsCount}, () => 0));
-
-        const siteCountsDate = siteTotalCountsDates.get(siteID);
-
-        for (let i = 0; i < counts.length; i++) {
-
-            if (siteCountsDate[i] === null) continue;
-
-            siteTotalCountsMeanPerMonth.get(siteID)[i] = counts[i] / getDaysInMonth(siteCountsDate[i].getMonth(), siteCountsDate[i].getFullYear())
-        }
-    }
+    let siteTotalCountsMeanPerMonth = calculateSiteTotalCountsMeanPerMonth(siteTotalCounts, siteTotalCountsDates, totalMothsCount);
 
     return {
         normalizedSiteCumulativeCountsGemeente: Object.fromEntries(getNormalizedSiteCumulativeCountsGemeente(siteTotalCountsMeanPerMonth, totalMothsCount, siteActiveSince, gemeenteActiveSince, siteIDs)),

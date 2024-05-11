@@ -140,13 +140,12 @@ let data = in_out.filter(item => item.siteID === ids).sort((a, b) => new Date(a.
 ### Jaaroverzicht
 
 ```js
-// input fields
-
 const SelectedSite = siteIDs.get(selectedSite)
 const firstYear = Object.keys(cumulatieveCounts.resultJSON)[0]
 const startDay = new Date(cumulatieveCounts.resultJSON[firstYear].startDate)
 
 startDay.setMonth(startDay.getMonth() + cumulatieveCounts.resultJSON[firstYear].siteActiveSince[SelectedSite]);
+// get all possible years
 const all_years = Object.keys(cumulatieveCounts.resultJSON).filter(year => year >= startDay.getFullYear())
 
 

@@ -1,7 +1,6 @@
 ---
 title: Fietstellingen
 ---
-
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
@@ -10,43 +9,9 @@ title: Fietstellingen
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
+```html
+
 <style>
-
-.hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: var(--sans-serif);
-  margin: 4rem 0 8rem;
-  text-wrap: balance;
-  text-align: center;
-}
-
-.hero h1 {
-  margin: 2rem 0;
-  max-width: none;
-  font-size: 14vw;
-  font-weight: 900;
-  line-height: 1;
-  background-clip: text;
-}
-
-.hero h2 {
-  margin: 0;
-  max-width: 34em;
-  font-size: 20px;
-  font-style: initial;
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--theme-foreground-muted);
-}
-
-@media (min-width: 640px) {
-  .hero h1 {
-    font-size: 90px;
-  }
-}
-
 .center-map {
     margin-left: auto;
     margin-right: auto;
@@ -59,15 +24,56 @@ title: Fietstellingen
     height: 600px;
 }
 
+p {
+    max-width: 100vw !important;
+}
 </style>
-<div class="hero">
-  <h1>Fietstellingen</h1>
-</div>
 
-## Meetpunten
-<div class="center-map" style="width: 100%">
-    <div id="map" class="style-map"></div>
+<div>
+    <div>
+        <h1>Fietstellingen</h1>
+    </div>
+    <p>
+        Er wordt dagelijks veel gefiets in België. Dit voor het plezier, 
+        maar ook heel veel woon-werk verkeer of studenten die van/naar school gaan.
+        Om dit beter in kaart te kunnen brengen heeft Agentschap wegen & verkeer Vlaanderen een 140tal fietspunten geplaats in vlaanderen.
+        Hierdoor hebben ze meer zicht op bijvoorbeeld volgende dingen: hoeveel fietsers rijden er per jaar, Wat is het aantal op piekmomenten, etc.
+    </p>
+    <p>
+        Wij hebben ons gefocused om volgende feiten te bekijken:
+    </p>
+        <div>
+            <ul>
+                <li>Drukte van fietsers doorheen de jaren</li>
+                <li>Het verschil tussen inkomend en uitgaand verkeer</li>
+                <li>De drukte op 1 bepaald meetpunt</li>
+                <li>Verandering van drukte op een meetpunt</li>
+            </ul>
+        </div>
+    <p>
+        Deze data is door Vlaanderen openbaar gemaakt als open data. 
+        Je kan de volledige data <a href="https://opendata.apps.mow.vlaanderen.be/fietstellingen/index.html">hier</a> vinden.
+    </p>
 </div>
+<div>
+    <h2>Meetpunten</h2>
+    <p>
+        Op deze map zijn alle meetpunten zichtbaar. Voor elk meetpunt is volgende info beschikbaar:
+    </p>
+
+    <div>
+        <ul>
+            <li>Naam van de site</li>
+            <li>De gemeente</li>
+            <li>Datum van de eerste telling</li>
+        </ul>
+    </div>
+    <div class="center-map" style="width: 100%">
+        <div id="map" class="style-map"></div>
+    </div>
+</div>
+<hr>
+```
 
 ```js
 // Imports

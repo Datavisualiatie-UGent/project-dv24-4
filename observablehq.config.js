@@ -3,23 +3,19 @@ export default {
   // The project’s title; used in the sidebar and webpage titles.
   title: "Fietstellingen",
   theme: "cotton",
-  toc: false,
+  toc: true,
   pager: false,
-  sidebar: false
+  sidebar: true,
 
 
   // The pages and sections in the sidebar. If you don’t specify this option,
   // all pages will be listed in alphabetical order. Listing pages explicitly
   // lets you organize them into sections and have unlisted pages.
-  // pages: [
-  //   {
-  //     name: "Examples",
-  //     pages: [
-  //       {name: "Dashboard", path: "/example-dashboard"},
-  //       {name: "Report", path: "/example-report"}
-  //     ]
-  //   }
-  // ],
+  pages: [
+    {name: "Gent", path: "/gent"},
+    {name: "Aalst", path: "/aalst"},
+    {name: "Explore it yourself", path: "/explore"}
+  ],
 
   // Some additional configuration options and their defaults:
   // theme: "default", // try "light", "dark", "slate", etc.

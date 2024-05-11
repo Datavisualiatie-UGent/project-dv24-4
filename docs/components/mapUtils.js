@@ -17,11 +17,10 @@ function extractInstallationDate(d) {
  * @returns {string} the popup HTML String
  */
 function createPopUp(d) {
-    return 'Site ID: ' + d.siteID + '<br>' +
-    'Naam site: ' + d.naam + '<br>' +
-    'Naam gemeente: ' + d.gemeente + '<br>' +
-    'Interval tellingen: ' + d.interval + "minuten" + '<br>' +
-    extractInstallationDate(d)
+    return 'Naam site: ' + d.naam + '<br>' +
+        'Naam gemeente: ' + d.gemeente + '<br>' +
+        'Interval tellingen: ' + d.interval + "minuten" + '<br>' +
+        extractInstallationDate(d)
 }
 
 /**

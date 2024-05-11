@@ -226,6 +226,5 @@ export function getResult(header, tellingen, siteIDs, sites) {
         totalMothsCount: totalMothsCount,
         gemeenteActiveSince: Object.fromEntries(gemeenteActiveSince),
         startDate: getElement(tellingen[0], "van"),
-        siteActiveSince: Object.fromEntries(siteActiveSince),
     }
 }

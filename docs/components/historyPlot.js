@@ -30,7 +30,7 @@ function getMonth(startDate, index, withYear = true) {
  * @param width the width of the plot
  * @returns {*}
  */
-export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, startDate, gemeentenActiveSince, totalMothsCount, {width} = {}, gemeenteActiveSince = undefined) {
+export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, startDate, gemeentenActiveSince, totalMothsCount, {width} = {}, gemeenteActiveSince = undefined, minY = undefined, maxY = undefined) {
 
     const lines = Array.from(Object.entries(normalizedSiteCumulativeCountsGemeente)).map(([gemeente, counts], i) => {
         let data;
@@ -55,14 +55,26 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
         });
     });
 
-    const minY = d3.min(lines, line => d3.min(line.data, d => d.value));
-    const maxY = d3.max(lines, line => d3.max(line.data, d => d.value));
+    if (minY === undefined) {
+        console.log("whee")
+        minY = d3.min(lines, line => d3.min(line.data, d => d.value));
+    }
+    if (maxY === undefined) {
+        maxY = d3.max(lines, line => d3.max(line.data, d => d.value));
+    }
 
     const minX = d3.min(lines, line => d3.min(line.data, d => d.timeslot));
     const maxX = d3.max(lines, line => d3.max(line.data, d => d.timeslot));
 
     const stepSize = 0.1;  // Pas dit aan aan uw behoeften
     const ticks = Math.ceil((maxY - minY) / stepSize);
+
+    lines.push(
+    Plot.dot(
+        [{ timeslot: minX, value: minY, gemeente: "" }, { timeslot: maxX, value: maxY, gemeente: "" }],
+        { x: "timeslot", y: "value", fillOpacity: 0, strokeOpacity: 0 }
+    )
+);
 
     return Plot.plot({
         width: width,
@@ -136,10 +148,24 @@ export function getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, 
     const firstTrendActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince[firstTrend]
     const secondTrendActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince[secondTrend]
 
+    // calculate minY and maxY
+    let allYValues = [];
+    for (let key in firstTrendsYears) {
+        allYValues.push(...firstTrendsYears[key]);
+    }
+    for (let key in secondTrendsYears) {
+        allYValues.push(...secondTrendsYears[key]);
+    }
+
+    let minY = d3.min(allYValues);
+    let maxY = d3.max(allYValues);
+
     return {
         firstTrendsYears,
         secondTrendsYears,
         firstTrendActiveSince,
-        secondTrendActiveSince
+        secondTrendActiveSince,
+        minY,
+        maxY
     }
 }

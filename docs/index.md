@@ -71,13 +71,14 @@ title: Fietstellingen
 
 ```js
 // Imports
+const estimatedCounts = FileAttachment("data/estimatedCounts.csv").csv({typed: true});
 const totalCounts = FileAttachment("data/totalCounts.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
-const richtingen = FileAttachment("data/richtingen.csv").csv({typed: true});
 const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
 const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true});
 const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").json();
 
+import {estimatedOverview} from "./components/estimatedOverview.js"
 import {overviewYearMonth, overviewYearWeekday} from "./components/overviewYear.js";
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
@@ -88,6 +89,15 @@ import {plotNormalizedData, getTrendCompareData, getFistAndSecondTrendYears} fro
 ```js
 createMap(sites);
 ```
+
+## Drukte benadering
+
+<div class="grid grid-cols-1">
+  <div class="card">
+    ${resize((width) => estimatedOverview(estimatedCounts, width))}
+  </div>
+</div>
+
 
 ## Aantal tellingen
 

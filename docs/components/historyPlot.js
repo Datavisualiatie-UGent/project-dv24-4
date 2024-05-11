@@ -31,7 +31,6 @@ function getMonth(startDate, index, withYear = true) {
  * @returns {*}
  */
 export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, startDate, gemeentenActiveSince, totalMothsCount, {width} = {}, gemeenteActiveSince = undefined, minY = undefined, maxY = undefined) {
-
     const lines = Array.from(Object.entries(normalizedSiteCumulativeCountsGemeente)).map(([gemeente, counts], i) => {
         let data;
         if (gemeenteActiveSince === undefined) {
@@ -45,7 +44,10 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
                 timeslot,
                 value,
                 gemeente
-            })).filter((value, timeslot) => timeslot >= gemeenteActiveSince)
+            }));
+            if (i === 0){
+                data = data.filter((value, timeslot) => timeslot >= gemeenteActiveSince)
+            }
         }
 
         return Plot.lineY(data, {
@@ -54,9 +56,7 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
             stroke: "gemeente",
         });
     });
-
     if (minY === undefined) {
-        console.log("whee")
         minY = d3.min(lines, line => d3.min(line.data, d => d.value));
     }
     if (maxY === undefined) {
@@ -70,11 +70,11 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
     const ticks = Math.ceil((maxY - minY) / stepSize);
 
     lines.push(
-    Plot.dot(
-        [{ timeslot: minX, value: minY, gemeente: "" }, { timeslot: maxX, value: maxY, gemeente: "" }],
-        { x: "timeslot", y: "value", fillOpacity: 0, strokeOpacity: 0 }
-    )
-);
+        Plot.dot(
+            [{timeslot: minX, value: minY, gemeente: ""}, {timeslot: maxX, value: maxY, gemeente: ""}],
+            {x: "timeslot", y: "value", fillOpacity: 0, strokeOpacity: 0}
+        )
+    );
 
     return Plot.plot({
         width: width,
@@ -140,13 +140,27 @@ export function getTrendCompareData(cumulatieveCounts, year, firstTrend, secondT
 export function getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, secondTrend) {
     const firstTrendsYears = {}
     const secondTrendsYears = {}
-    const indexYear = Object.keys(cumulatieveCounts.resultJSON).indexOf(year)
-    for (let i = indexYear; i < Object.keys(cumulatieveCounts.resultJSON).length; i++) {
-        firstTrendsYears[firstTrend + " " + Object.keys(cumulatieveCounts.resultJSON)[i]] = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[firstTrend]
-        secondTrendsYears[secondTrend + " " + Object.keys(cumulatieveCounts.resultJSON)[i]] = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[secondTrend]
+
+    let firstTrendActiveSince;
+    let secondTrendActiveSince;
+
+    // get the first and second trend of all active years
+    for (let i = 0; i < Object.keys(cumulatieveCounts.resultJSON).length; i++) {
+        if (cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[firstTrend]) {
+            // get the first trend active since
+            if (firstTrendActiveSince === undefined) {
+                firstTrendActiveSince = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].gemeenteActiveSince[firstTrend]
+            }
+            firstTrendsYears[firstTrend + " " + Object.keys(cumulatieveCounts.resultJSON)[i]] = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[firstTrend]
+        }
+        if (cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[secondTrend]) {
+            // get the second trend active since
+            if (secondTrendActiveSince === undefined) {
+                secondTrendActiveSince = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].gemeenteActiveSince[secondTrend]
+            }
+            secondTrendsYears[secondTrend + " " + Object.keys(cumulatieveCounts.resultJSON)[i]] = cumulatieveCounts.resultJSON[Object.keys(cumulatieveCounts.resultJSON)[i]].normalizedSiteCumulativeCountsGemeente[secondTrend]
+        }
     }
-    const firstTrendActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince[firstTrend]
-    const secondTrendActiveSince = cumulatieveCounts.resultJSON[year].gemeenteActiveSince[secondTrend]
 
     // calculate minY and maxY
     let allYValues = [];
@@ -166,6 +180,7 @@ export function getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, 
         firstTrendActiveSince,
         secondTrendActiveSince,
         minY,
-        maxY
+        maxY,
+        totalMothsCount: 12
     }
 }

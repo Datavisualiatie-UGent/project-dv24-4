@@ -98,11 +98,14 @@ createMap(sites);
 ```html
 <div>
     <div>
-        <p>TODO</p>
+        <p>
+            Het aantal fietsers op de baan is sterk afhankelijk per seizoen.
+            Vandaar hebben deze grafiek gemaakt die overheen de jaren de drukte op de fietspaden benadert.
+        </p>
     </div>
     <div class="grid grid-cols-1">
     <div class="card">
-        ${resize((width) => estimatedOverview(estimatedCounts,50, width))}
+        ${resize((width) => estimatedOverview(estimatedCounts,50, width, false))}
     </div>
     </div>
 </div>

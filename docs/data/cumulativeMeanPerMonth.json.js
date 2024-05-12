@@ -38,6 +38,14 @@ for (let [year, data] of Object.entries(years)) {
     resultJSON[year] = getResult(header, data, siteIDs, sites);
 }
 
+// filter out the years that does not start with january
+for (let year in resultJSON) {
+    let startDate = new Date(resultJSON[year].startDate);
+    if (startDate.getMonth() !== 0) {
+        delete resultJSON[year];
+    }
+}
+
 console.log(JSON.stringify({
     resultJSON
 }))

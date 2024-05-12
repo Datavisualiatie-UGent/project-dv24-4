@@ -81,9 +81,11 @@ p {
 
 ```js
 // Imports
+const estimatedCounts = FileAttachment("data/estimatedCounts.csv").csv({typed: true});
 const totalCounts = FileAttachment("data/totalCounts.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 
+import {estimatedOverview} from "./components/estimatedOverview.js"
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
 ```
@@ -92,11 +94,11 @@ import {barChart} from "./components/barChartSiteIDAantal.js";
 createMap(sites);
 ```
 
-
-## Aantal tellingen
-
+## Drukte benadering
 <div class="grid grid-cols-1">
-  <div class="card">${resize((width) => barChart(totalCounts, {width}))}</div>
+  <div class="card">
+    ${resize((width) => estimatedOverview(estimatedCounts, width))}
+  </div>
 </div>
 
 

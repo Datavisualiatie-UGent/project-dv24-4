@@ -95,11 +95,15 @@ createMap(sites);
 ```
 
 ## Drukte benadering
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => estimatedOverview(estimatedCounts, width))}
-  </div>
+```html
+<div>
+    <div>
+        <p>TODO</p>
+    </div>
+    <div class="grid grid-cols-1">
+    <div class="card">
+        ${resize((width) => estimatedOverview(estimatedCounts,50, width))}
+    </div>
+    </div>
 </div>
-
-
-
+```

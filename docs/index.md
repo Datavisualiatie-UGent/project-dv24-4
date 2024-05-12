@@ -89,35 +89,43 @@ import {plotNormalizedData, getTrendCompareData, getFistAndSecondTrendYears} fro
 createMap(sites);
 ```
 
+```js
+const siteIDs = new Map();
+
+const activeSiteIds = new Set(totalCounts.map(d => d.siteID))
+for (let item of sites) {
+    if (activeSiteIds.has(item.siteID)) {
+        if (siteIDs.has(item.naam)) {
+            siteIDs.set(item.naam + " + id: " + item.siteID, item.siteID);
+        } else {
+            siteIDs.set(item.naam, item.siteID);
+        }
+    }
+}
+const names = Array.from(siteIDs.keys()).sort();
+```
+
+### Selecteer site:
+```js
+let selectedSite = view(Inputs.select(names, {value: "Gent"}))
+```
+
+
 ## Aantal tellingen
 
 <div class="grid grid-cols-1">
   <div class="card">${resize((width) => barChart(totalCounts, {width}))}</div>
 </div>
 
-```js
-const siteIDs = new Map();
-let names = [];
 
-for(let item of sites){
-  siteIDs.set(item.naam,item.siteID);
-  names.push(item.naam);
-}
-names = names.sort()
-```
 
 ## Gemiddeld aantal tellingen per meetpunt
-
 ```js
-let gemeente = view(Inputs.select(names, {value: "Gent"}))
-```
-```js
-let ids = siteIDs.get(gemeente) ?? []
+let ids = siteIDs.get(selectedSite) ?? []
 ```
 
 
-<h2>${gemeente}</h2>
-<p>${ids}</p>
+<h3>${selectedSite}:</h3>
 
 ```js
 let data = in_out.filter(item => item.siteID === ids).sort((a, b) => new Date(a.timeframe) > new Date(b.timeframe))
@@ -130,23 +138,20 @@ let data = in_out.filter(item => item.siteID === ids).sort((a, b) => new Date(a.
 </div>
 
 ### Jaaroverzicht
-```js
-let all_years = [... new Set(jaaroverzicht.map(d => new Date(d.dag).getFullYear().toString()))]
-let all_sites = [... new Set(jaaroverzicht.map(d => d.siteID.toString()))].sort((a, b) => a-b)
-```
 
 ```js
-// input fields
+const SelectedSite = siteIDs.get(selectedSite)
+
+// get all possible years
+const all_years = [... new Set(jaaroverzicht.filter(d => d.siteID == SelectedSite).map(d => new Date(d.dag).getFullYear().toString()))]
+
 const SelectedYearInput = Inputs.select(all_years)
 const selectedYear = Generators.input(SelectedYearInput)
-const SelectedSiteInput = Inputs.select(all_sites)
-const SelectedSite = Generators.input(SelectedSiteInput)
 ```
 
 
 <div class="card" style="display: flex; gap: 0.5rem;">
     <div>${SelectedYearInput}</div>
-    <div>${SelectedSiteInput}</div>
 </div>
 
 <div class="grid grid-cols-1">
@@ -177,13 +182,13 @@ const year = view(Inputs.select(Object.keys(cumulatieveCounts.resultJSON), {valu
 
 
 ```js
-const possibleFirstTrends = Object.keys(cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCountsGemeente)
+const possibleFirstTrends = Object.keys(cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCountsGemeente).sort()
 
 const firstTrend = view(Inputs.select(possibleFirstTrends), {value: possibleFirstTrends[0]})
 ```
 
 ```js
-const possibleSencondTrends = Object.keys(cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCountsGemeente).filter(gemeente => gemeente !== firstTrend)
+const possibleSencondTrends = possibleFirstTrends.filter(gemeente => gemeente !== firstTrend)
 const secondTrend = view(Inputs.select(possibleSencondTrends), {value: possibleSencondTrends[0]})
 ```
 
@@ -200,13 +205,11 @@ const trendCompareData = getTrendCompareData(cumulatieveCounts, year, firstTrend
 const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, secondTrend)
 ```
 
-<div class="grid grid-cols-1">
-  <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.firstTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, trendCompareData.totalMothsCount, {width: width}, fistAndSecondTrendYears.firstTrendActiveSince))}</div>
+<div class="grid grid-cols-2">
+  <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.firstTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.firstTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
+  <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.secondTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.secondTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
 </div>
 
-<div class="grid grid-cols-1">
-  <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.secondTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, trendCompareData.totalMothsCount, {width: width}, fistAndSecondTrendYears.secondTrendActiveSince))}</div>
-</div>
 
 <!-- 
 TREND 

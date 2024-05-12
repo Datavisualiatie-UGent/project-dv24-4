@@ -5,15 +5,10 @@ title: Aalst
 ```js
 const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
-const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").json();
-const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
 
 
-import {estimatedOverview} from "./components/estimatedOverview.js";
 import {overviewYearWeekday} from "./components/overviewYear.js";
 import {createMap} from "./components/mapUtils.js";
-import {plotNormalizedData, getTrendCompareData, getFistAndSecondTrendYears} from './components/historyPlot.js';
-import {doubleBarHorizontal} from "./components/dailyVolume.js";
 
 ```
 

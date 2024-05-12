@@ -182,13 +182,13 @@ const year = view(Inputs.select(Object.keys(cumulatieveCounts.resultJSON), {valu
 
 
 ```js
-const possibleFirstTrends = Object.keys(cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCountsGemeente)
+const possibleFirstTrends = Object.keys(cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCountsGemeente).sort()
 
 const firstTrend = view(Inputs.select(possibleFirstTrends), {value: possibleFirstTrends[0]})
 ```
 
 ```js
-const possibleSencondTrends = Object.keys(cumulatieveCounts.resultJSON[year].normalizedSiteCumulativeCountsGemeente).filter(gemeente => gemeente !== firstTrend)
+const possibleSencondTrends = possibleFirstTrends.filter(gemeente => gemeente !== firstTrend)
 const secondTrend = view(Inputs.select(possibleSencondTrends), {value: possibleSencondTrends[0]})
 ```
 

@@ -87,7 +87,8 @@ export function overviewYearWeekday(data, year, site, width) {
                         aantal: true,
                         channels: true,
                         x: false,
-                        y: false
+                        y: false,
+                        fy: false
                     }
                 },
                 inset: 0.5

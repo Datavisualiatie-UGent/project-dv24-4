@@ -13,7 +13,7 @@ let counts = new Map(d3.groups(data, d => d.siteID, d=> {
   const dd = new Date(d.van)
   return `${dd.getFullYear()}-${dd.getMonth()+1}-${dd.getDate()}`
 }).map(([siteID, counts], _) => {
-  return [parseInt(siteID), counts.length]
+  return [siteID, counts.length]
 }))
 
 // group data per siteID and per 15 minutes
@@ -48,8 +48,8 @@ process.stdout.write("siteID,timeframe,in,out\n");
 for (const [siteID, vvv] of grouped) {
   for (const [timeframe, v] of vvv) {
     const tt = new Date(`2024-01-01 ${calculateLabel(timeframe)}:00 UTC`)
-    const ins = v.in / parseInt(siteID);
-    const out = v.out / parseInt(siteID);
+    const ins = (v.in / counts.get(siteID)).toFixed(2);
+    const out = (v.out / counts.get(siteID)).toFixed(2);
     process.stdout.write(`${siteID},${tt},${ins},${out}\n`);
   }
 }

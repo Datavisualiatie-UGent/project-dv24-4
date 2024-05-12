@@ -11,6 +11,7 @@ export function estimatedOverview(data, k, width) {
             label: "drukte",
             grid: true
         },
+        ymin:0,
 
         marks: [
             Plot.lineY(data, Plot.windowY({k: k, reduce: "mean"}, {x: (d) => new Date(d.datum), y: "aantal", stroke: "grey", curve:"basis"})),

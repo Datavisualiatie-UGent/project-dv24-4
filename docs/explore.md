@@ -76,7 +76,7 @@ let data = in_out.filter(item => item.siteID === ids).sort((a, b) => new Date(a.
 const SelectedSite = siteIDs.get(selectedSite)
 
 // get all possible years
-const all_years = [... new Set(jaaroverzicht.filter(d => d.siteID == SelectedSite).map(d => new Date(d.dag).getFullYear().toString()))]
+const all_years = [... new Set(jaaroverzicht.filter(d => d.siteID == SelectedSite).map(d => new Date(d.datum).getFullYear().toString()))]
 
 const SelectedYearInput = Inputs.select(all_years)
 const selectedYear = Generators.input(SelectedYearInput)
@@ -95,7 +95,7 @@ const selectedYear = Generators.input(SelectedYearInput)
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(selectedYear), parseInt(SelectedSite), width))}
+    ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(SelectedSite), width))}
   </div>
 </div>
 

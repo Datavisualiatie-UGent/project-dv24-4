@@ -9,7 +9,7 @@ import * as d3 from "npm:d3";
  */
 function filterData(data, year=null, site=null) {
     return data.filter((d) => {
-        const y = year !== null ? new Date(d.dag).getFullYear() === year : true
+        const y = year !== null ? new Date(d.datum).getFullYear() === year : true
         const s = site !== null ? d.siteID === site : true
         return y && s
     }
@@ -35,11 +35,11 @@ export function overviewYearMonth(data, year, site, width) {
         y: {tickFormat: Plot.formatMonth("nl", "short")}, // labels will be names instead of numbers
         marks: [
             Plot.cell(filtered, {
-                x: d => new Date(d.dag).getDate(),
-                y: d => new Date(d.dag).getMonth(),
+                x: d => new Date(d.datum).getDate(),
+                y: d => new Date(d.datum).getMonth(),
                 fill: "aantal",
                 channels: {
-                    Datum: "dag",
+                    Datum: "datum",
                 },
                 tip: {
                     format: {
@@ -57,10 +57,9 @@ export function overviewYearMonth(data, year, site, width) {
 
 /**
  * @param {*} data
- * @param {number} year
  * @param {*} site
  */
-export function overviewYearWeekday(data, year, site, width) {
+export function overviewYearWeekday(data, site, width) {
     // Only use the data of the correct year and site
     // const filtered = filterData(data, year, site)
     const filtered = filterData(data, undefined, site)
@@ -70,16 +69,29 @@ export function overviewYearWeekday(data, year, site, width) {
         padding: 0,
         color: {type: "linear", scheme: "Greens"},
         width: width,
-        x: {axis: null},
+        x: {
+            axis: "both",
+            tickSize: "0",
+            tickFormat: (x) => {
+                let d = new Date(new Date().getFullYear(), 0, 1);
+                d.setDate(d.getDate() + (parseInt(x))*7)
+
+                if (d.getDate() < 8 && d.getFullYear() === new Date().getFullYear()) {
+                    return d.toLocaleString('nl-be',{month:'short'})
+                } else {
+                    return ""
+                }
+            },
+        },
         y: {tickFormat: Plot.formatWeekday("nl", "short"), tickSize: 0}, // labels will be names instead of numbers
-        fy: {tickFormat: ""},
+        fy: {tickFormat: "", padding:0.07},
         marks: [
             Plot.cell(filtered, {
-                x: (d) => d3.utcWeek.count(d3.timeYear(new Date(d.dag)), new Date(d.dag)),
-                y: d => new Date(d.dag).getDay() !== 0 ? new Date(d.dag).getDay() : 7,
-                fy: (d) => new Date(d.dag).getFullYear(),
+                x: (d) => d3.utcWeek.count(d3.timeYear(new Date(d.datum)), new Date(d.datum)),
+                y: d => new Date(d.datum).getDay() !== 0 ? new Date(d.datum).getDay() : 7,
+                fy: (d) => new Date(d.datum).getFullYear(),
                 channels: {
-                    Datum: "dag",
+                    Datum: "datum",
                 },
                 fill: "aantal",
                 tip: {
@@ -87,7 +99,8 @@ export function overviewYearWeekday(data, year, site, width) {
                         aantal: true,
                         channels: true,
                         x: false,
-                        y: false
+                        y: false,
+                        fy: false
                     }
                 },
                 inset: 0.5

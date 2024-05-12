@@ -22,7 +22,7 @@ grouped.forEach((value, key) => {
 )
 
 // Write results to stdout
-process.stdout.write("siteID,dag,aantal\n");
+process.stdout.write("siteID,datum,aantal\n");
 
 new_map.forEach((value, key) => {
     value.forEach(value => {

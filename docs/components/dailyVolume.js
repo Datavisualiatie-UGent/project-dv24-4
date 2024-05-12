@@ -8,6 +8,7 @@ function calculateLabel(timeframe) {
 
 export function doubleBarHorizontal(data, {width}) {
     return Plot.plot({
+        title: "Inkomende en uitgaande fietsers.",
         width: width,
         y: {grid: true},
         x: {
@@ -26,30 +27,31 @@ export function doubleBarHorizontal(data, {width}) {
         marginLeft: 50,
         color: {
             scheme: "PiYg",
-            type: "ordinal"
+            type: "ordinal",
+            legend: true
         },
         marks: [
             Plot.axisY({anchor: "left", label: "aantal fietsers"}),
             Plot.rectY(
                 data,
-                {y: "in", x: "timeframe", fill: (d) => Math.sign(d.in)},
+                {y: "out", x: "timeframe", fill: (d) => "Uitgaand"}
             ),
             Plot.rectY(
                 data,
-                {y: "out", x: "timeframe", fill: (d) => Math.sign(d.out)}
+                {y: "in", x: "timeframe", fill: (d) => "Inkomend"},
             ),
             Plot.ruleY([0]),
             Plot.tip(data, Plot.pointer({
                 y: "out",
                 x: "timeframe",
-                title: (d) => [`Hour: ${calculateLabel(new Date(d.timeframe))}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
-                fill: (d) => Math.sign(d.in)
+                title: (d) => [`Uur: ${calculateLabel(new Date(d.timeframe))}`, `Inkomend: ${d.in}`, `Uitgaand: ${d.out}`].join("\n\n"),
+                fill: (d) => "Uitgaand"
             })),
             Plot.tip(data, Plot.pointer({
                 y: "in",
                 x: "timeframe",
-                title: (d) => [`Hour: ${calculateLabel(new Date(d.timeframe))}`, `arrived: ${d.in}`, `departed: ${d.out}`].join("\n\n"),
-                fill: (d) => Math.sign(d.in)
+                title: (d) => [`Uur: ${calculateLabel(new Date(d.timeframe))}`, `Inkomend: ${d.in}`, `Uitgaand: ${d.out}`].join("\n\n"),
+                fill: (d) => "Inkomend"
             })),
         ]
     })

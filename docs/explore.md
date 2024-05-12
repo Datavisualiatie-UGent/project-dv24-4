@@ -2,6 +2,14 @@
 title: Explore it yourself
 ---
 
+```html
+<style>
+    p {
+        max-width: 100vw !important;
+    }
+</style>
+```
+
 ```js
 // Imports
 const totalCounts = FileAttachment("data/totalCounts.csv").csv({typed: true});
@@ -50,16 +58,21 @@ let selectedSite = view(Inputs.select(names, {value: "Gent"}))
 let selectedSiteId = siteIDs.get(selectedSite)
 ```
 
-<p>
-    Over het algemeen is bij de meeste punten de volgende trend te zien: 
-rond 8h is er een toename van fietsers in beide richtingen, dit zal de ochtendspits zijn van iedereen die naar het werk moet.
-De avondspits is meer uitgesmeerd aangezien sommige mensen langer werken of misschien nog een activiteit hebben na het werk.
-Sommige meetpunten liggen langs een grote baan, en zijn gesplitst in 2 stations. Hierdoor is er een asymmetrie tussen het binnenkomende en uitgaande verkeer.
-Een paar voorbeelden hiervan zijn 'Ardooie teller 1' en 'Ardooie teller 2'. 
-De oriëntatie van de teller is ook niet altijd consistent zoals bijvoorbeeld bij 'Brasschaat 2' en 'Brasschaat 1'
-</p>
+```html
+<div>
+    <p>
+        Over het algemeen is bij de meeste punten de volgende trend te zien:
+        rond 8h is er een toename van fietsers in beide richtingen, dit zal de ochtendspits zijn van iedereen die naar het werk moet.
+        De avondspits is meer uitgesmeerd aangezien sommige mensen langer werken of misschien nog een activiteit hebben na het werk.
+        Sommige meetpunten liggen langs een grote baan, en zijn gesplitst in 2 stations. Hierdoor is er een asymmetrie tussen het binnenkomende en uitgaande verkeer.
+        Een paar voorbeelden hiervan zijn 'Ardooie teller 1' en 'Ardooie teller 2'.
+        De oriëntatie van de teller is ook niet altijd consistent zoals bijvoorbeeld bij 'Brasschaat 2' en 'Brasschaat 1'
+    </p>
+    <h3>${selectedSite}:</h3>
+</div>
+```
 
-<h3>${selectedSite}:</h3>
+
 
 ```js
 let data = in_out.filter(item => item.siteID === selectedSiteId).sort((a, b) => new Date(a.timeframe) > new Date(b.timeframe))

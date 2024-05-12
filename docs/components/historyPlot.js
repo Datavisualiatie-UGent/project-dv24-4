@@ -97,7 +97,7 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
         marks: [
             ...lines,
         ],
-        title: "Gemiddelde Cumulatieve Procentuele Verandering in Tellingen per Gemeente vanaf Maand Eén"
+        title: "Procentuele verandering van cumulatief gemiddelde ten opzichte van initiële maand"
     });
 }
 
@@ -137,7 +137,7 @@ export function getTrendCompareData(cumulatieveCounts, year, firstTrend, secondT
  * @param secondTrend
  * @returns {{secondTrendActiveSince: *, firstTrendsYears: {}, firstTrendActiveSince: *, secondTrendsYears: {}}}
  */
-export function getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, secondTrend) {
+export function getFistAndSecondTrendYears(cumulatieveCounts, firstTrend, secondTrend) {
     const firstTrendsYears = {}
     const secondTrendsYears = {}
 

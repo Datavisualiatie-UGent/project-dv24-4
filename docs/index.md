@@ -97,7 +97,7 @@ createMap(sites);
 ## Drukte benadering
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => estimatedOverview(estimatedCounts, width))}
+    ${resize((width) => estimatedOverview(estimatedCounts,50, width))}
   </div>
 </div>
 

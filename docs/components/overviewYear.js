@@ -9,7 +9,7 @@ import * as d3 from "npm:d3";
  */
 function filterData(data, year=null, site=null) {
     return data.filter((d) => {
-        const y = year !== null ? new Date(d.dag).getFullYear() === year : true
+        const y = year !== null ? new Date(d.datum).getFullYear() === year : true
         const s = site !== null ? d.siteID === site : true
         return y && s
     }
@@ -35,11 +35,11 @@ export function overviewYearMonth(data, year, site, width) {
         y: {tickFormat: Plot.formatMonth("nl", "short")}, // labels will be names instead of numbers
         marks: [
             Plot.cell(filtered, {
-                x: d => new Date(d.dag).getDate(),
-                y: d => new Date(d.dag).getMonth(),
+                x: d => new Date(d.datum).getDate(),
+                y: d => new Date(d.datum).getMonth(),
                 fill: "aantal",
                 channels: {
-                    Datum: "dag",
+                    Datum: "datum",
                 },
                 tip: {
                     format: {
@@ -74,11 +74,11 @@ export function overviewYearWeekday(data, site, width) {
         fy: {tickFormat: ""},
         marks: [
             Plot.cell(filtered, {
-                x: (d) => d3.utcWeek.count(d3.timeYear(new Date(d.dag)), new Date(d.dag)),
-                y: d => new Date(d.dag).getDay() !== 0 ? new Date(d.dag).getDay() : 7,
-                fy: (d) => new Date(d.dag).getFullYear(),
+                x: (d) => d3.utcWeek.count(d3.timeYear(new Date(d.datum)), new Date(d.datum)),
+                y: d => new Date(d.datum).getDay() !== 0 ? new Date(d.datum).getDay() : 7,
+                fy: (d) => new Date(d.datum).getFullYear(),
                 channels: {
-                    Datum: "dag",
+                    Datum: "datum",
                 },
                 fill: "aantal",
                 tip: {

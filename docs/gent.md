@@ -72,7 +72,7 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new
         <p>
             Hier zien we algemene drukte van het fietspad over de tijd dat het meetpunt bestaat.
             Het valt hier direct al op dat het fietspad vooral gebruikt wordt tussen de maanden april/juni en september/November.
-            Ook valt het op ddat er bijna elke zomer een grote daling is van de drukte.
+            Ook valt het op dat er bijna elke zomer een grote daling is van de drukte.
         </p>
     </div>
     <div class="grid grid-cols-1">

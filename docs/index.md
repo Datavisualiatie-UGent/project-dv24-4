@@ -34,13 +34,13 @@ p {
 ```html
 <div>
     <p>
-        Er wordt dagelijks veel gefiets in België. Dit voor het plezier, 
+        Er wordt dagelijks veel gefietst in België. Dit voor het plezier, 
         maar ook heel veel woon-werk verkeer of studenten die van/naar school gaan.
-        Om dit beter in kaart te kunnen brengen heeft Agentschap wegen & verkeer Vlaanderen een 140tal fietspunten geplaats in vlaanderen.
+        Om dit beter in kaart te kunnen brengen heeft Agentschap wegen & verkeer Vlaanderen een 140-tal fietspunten geplaatst in Vlaanderen.
         Hierdoor hebben ze meer zicht op bijvoorbeeld volgende dingen: hoeveel fietsers rijden er per jaar, Wat is het aantal op piekmomenten, etc.
     </p>
     <p>
-        Wij hebben ons gefocused om volgende feiten te bekijken:
+        Wij hebben ons gefocust om volgende feiten te bekijken:
     </p>
         <div>
             <ul>

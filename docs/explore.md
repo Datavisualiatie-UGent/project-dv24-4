@@ -87,7 +87,7 @@ const selectedYear = Generators.input(SelectedYearInput)
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(selectedYear), parseInt(SelectedSite), width))}
+    ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(SelectedSite), width))}
   </div>
 </div>
 

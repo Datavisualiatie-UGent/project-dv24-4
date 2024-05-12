@@ -71,23 +71,30 @@ function checkBounds(map, bounds) {
 /**
  * Creates a map with the given sites
  * @param sites the sites to create the map with
+ * @param centerSite If needs to be centered on a site
  */
-export function createMap(sites) {
+export function createMap(sites, centerSite=null) {
     // create map
-    const northEast = L.latLng(51.6, 6.05),
-        southWest = L.latLng(50.4, 2.5),
-        bounds = L.latLngBounds(southWest, northEast);
+    const northEast = L.latLng(51.6, 6.05)
+    const southWest = L.latLng(50.4, 2.5)
+    const bounds = L.latLngBounds(southWest, northEast)
 
-    const centerLat = (southWest.lat + northEast.lat) / 2;
-    const centerLng = (southWest.lng + northEast.lng) / 2;
-
+    let centerLat, centerLng;
+    if (centerSite == null) {
+        centerLat = (southWest.lat + northEast.lat) / 2
+        centerLng = (southWest.lng + northEast.lng) / 2
+    } else {
+        const site = sites.filter(d => d.siteID === centerSite)
+        centerLat = site[0].lat
+        centerLng = site[0].long
+    }
 
     const map = L.map('map', {
         center: [centerLat, centerLng],
         bounds: bounds,
         maxBoundsViscosity: 0.9,
         zoomControl: false,
-    }).setView([centerLat, centerLng], 9);
+    }).setView([centerLat, centerLng], centerSite == null ? 9 : 14);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',

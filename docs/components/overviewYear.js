@@ -57,10 +57,9 @@ export function overviewYearMonth(data, year, site, width) {
 
 /**
  * @param {*} data
- * @param {number} year
  * @param {*} site
  */
-export function overviewYearWeekday(data, year, site, width) {
+export function overviewYearWeekday(data, site, width) {
     // Only use the data of the correct year and site
     // const filtered = filterData(data, year, site)
     const filtered = filterData(data, undefined, site)

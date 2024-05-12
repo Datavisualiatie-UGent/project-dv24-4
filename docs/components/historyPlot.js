@@ -97,7 +97,7 @@ export function plotNormalizedData(normalizedSiteCumulativeCountsGemeente, start
         marks: [
             ...lines,
         ],
-        title: "Gemiddelde Cumulatieve Procentuele Verandering in Tellingen per Gemeente vanaf Maand Eén"
+        title: "Procentuele verandering van cumulatief gemiddelde ten opzichte van initiële maand"
     });
 }
 

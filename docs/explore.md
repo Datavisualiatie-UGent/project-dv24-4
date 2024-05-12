@@ -105,11 +105,15 @@ const selectedYear = Generators.input(SelectedYearInput)
 TREND 
 -->
 ## Trend fietstellingen
+
+<div>Patronen, in dit geval trends genoemd, worden zichtbaar gedurende een bepaalde periode. We concentreren ons hier op trends die zich binnen één jaar voordoen. Door deze trends te onderzoeken, kunnen we veel leren over de groei en afname van fietsers in een bepaalde gemeente gedurende deze periode.</div>
+<br/>
+<div>Bij het analyseren van trends letten we op de helling van de stijging of daling tussen twee opeenvolgende maanden. Een steilere helling wijst op een krachtigere groei, terwijl hetzelfde geldt voor een daling in omgekeerde richting.</div>
+
 <label>Selecteer jaar:</label>
 ```js
 const year = view(Inputs.select(Object.keys(cumulatieveCounts.resultJSON), {value: Object.keys(cumulatieveCounts.resultJSON)[0]}))
 ```
-
 <label>Selecteer gemeentes:</label>
 <div style="display: flex; justify-content: space-between; align-items: center;">
 
@@ -133,6 +137,8 @@ const trendCompareData = getTrendCompareData(cumulatieveCounts, year, firstTrend
   <div class="card">${resize((width) => plotNormalizedData(trendCompareData.filteredObj, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, trendCompareData.totalMothsCount, {width: width}))}</div>
 </div>
 
+<div>Over het algemeen is opmerkelijk dat er een aanzienlijke groei is tijdens de lente- en zomermaanden, naarmate het weer verbetert. Bovendien is er een duidelijke overgang naar de koudere herfst- en wintermaanden te zien, gekenmerkt door een significante neerwaartse trend.</div>
+
 ```js
 // all years after year for first trend
 const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, secondTrend)
@@ -143,6 +149,7 @@ const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, ye
   <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.secondTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.secondTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
 </div>
 
+<div>Ook het effect van de coronaperiode is waarneembaar. In 2020 begint de groei van fietsgebruik langzamer, wat toe te wijten is aan de start van de lockdown in maart. Dit fenomeen is ook duidelijk zichtbaar in de grafiek van de drukte. In latere jaren blijft de groei meestal rond dezelfde maanden plaatsvinden.</div>
 
 <!-- 
 TREND 

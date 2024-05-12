@@ -3,8 +3,6 @@ import path from "path";
 import * as d3 from "d3";
 import fs from "node:fs/promises";
 import {csvFormat} from "d3-dsv";
-import {sites} from "./sitesUtils.js";
-
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

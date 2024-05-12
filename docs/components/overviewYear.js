@@ -69,9 +69,22 @@ export function overviewYearWeekday(data, site, width) {
         padding: 0,
         color: {type: "linear", scheme: "Greens"},
         width: width,
-        x: {axis: null},
+        x: {
+            axis: "both",
+            tickSize: "0",
+            tickFormat: (x) => {
+                let d = new Date(new Date().getFullYear(), 0, 1);
+                d.setDate(d.getDate() + (parseInt(x))*7)
+
+                if (d.getDate() < 8 && d.getFullYear() === new Date().getFullYear()) {
+                    return d.toLocaleString('nl-be',{month:'short'})
+                } else {
+                    return ""
+                }
+            },
+        },
         y: {tickFormat: Plot.formatWeekday("nl", "short"), tickSize: 0}, // labels will be names instead of numbers
-        fy: {tickFormat: ""},
+        fy: {tickFormat: "", padding:0.07},
         marks: [
             Plot.cell(filtered, {
                 x: (d) => d3.utcWeek.count(d3.timeYear(new Date(d.datum)), new Date(d.datum)),

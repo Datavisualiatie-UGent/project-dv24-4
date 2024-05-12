@@ -137,7 +137,7 @@ export function getTrendCompareData(cumulatieveCounts, year, firstTrend, secondT
  * @param secondTrend
  * @returns {{secondTrendActiveSince: *, firstTrendsYears: {}, firstTrendActiveSince: *, secondTrendsYears: {}}}
  */
-export function getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, secondTrend) {
+export function getFistAndSecondTrendYears(cumulatieveCounts, firstTrend, secondTrend) {
     const firstTrendsYears = {}
     const secondTrendsYears = {}
 

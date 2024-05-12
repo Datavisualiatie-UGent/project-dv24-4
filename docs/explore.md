@@ -12,6 +12,7 @@ const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").jso
 
 import {overviewYearMonth, overviewYearWeekday} from "./components/overviewYear.js";
 import {doubleBarHorizontal} from "./components/dailyVolume.js";
+import {estimatedOverview} from "./components/estimatedOverview.js";
 import {plotNormalizedData, getTrendCompareData, getFistAndSecondTrendYears} from './components/historyPlot.js';
 ```
 
@@ -46,7 +47,7 @@ let selectedSite = view(Inputs.select(names, {value: "Gent"}))
 
 ## Gemiddeld aantal tellingen per meetpunt
 ```js
-let ids = siteIDs.get(selectedSite) ?? []
+let selectedSiteId = siteIDs.get(selectedSite)
 ```
 
 <p>
@@ -61,7 +62,7 @@ De oriëntatie van de teller is ook niet altijd consistent zoals bijvoorbeeld bi
 <h3>${selectedSite}:</h3>
 
 ```js
-let data = in_out.filter(item => item.siteID === ids).sort((a, b) => new Date(a.timeframe) > new Date(b.timeframe))
+let data = in_out.filter(item => item.siteID === selectedSiteId).sort((a, b) => new Date(a.timeframe) > new Date(b.timeframe))
 ```
 
 <div class="grid grid-cols-1">
@@ -70,13 +71,31 @@ let data = in_out.filter(item => item.siteID === ids).sort((a, b) => new Date(a.
 
 </div>
 
+## Drukte
+
+```js
+const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new Date(b.datum) - new Date(a.datum))
+```
+```html
+
+<div>
+    <div>
+        <p>tekst</p>
+    </div>
+    <div class="grid grid-cols-1">
+        <div class="card">
+            ${resize((width) => estimatedOverview(drukte_data, 20, width))}
+        </div>
+    </div>
+</div>
+<hr>
+```
+
 ## Jaaroverzicht
 
 ```js
-const SelectedSite = siteIDs.get(selectedSite)
-
 // get all possible years
-const all_years = [... new Set(jaaroverzicht.filter(d => d.siteID == SelectedSite).map(d => new Date(d.datum).getFullYear().toString()))]
+const all_years = [... new Set(jaaroverzicht.filter(d => d.siteID == selectedSiteId).map(d => new Date(d.datum).getFullYear().toString()))]
 
 const SelectedYearInput = Inputs.select(all_years)
 const selectedYear = Generators.input(SelectedYearInput)
@@ -89,13 +108,13 @@ const selectedYear = Generators.input(SelectedYearInput)
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => overviewYearMonth(jaaroverzicht, parseInt(selectedYear), parseInt(SelectedSite), width))}
+    ${resize((width) => overviewYearMonth(jaaroverzicht, parseInt(selectedYear), parseInt(selectedSiteId), width))}
   </div>
 </div>
 
 <div class="grid grid-cols-1">
   <div class="card">
-    ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(SelectedSite), width))}
+    ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(selectedSiteId), width))}
   </div>
 </div>
 
@@ -141,7 +160,7 @@ const trendCompareData = getTrendCompareData(cumulatieveCounts, year, firstTrend
 
 ```js
 // all years after year for first trend
-const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, year, firstTrend, secondTrend)
+const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, firstTrend, secondTrend)
 ```
 
 <div class="grid grid-cols-2">

@@ -5,10 +5,12 @@ title: Gent
 ```js
 const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
+const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").json();
 
 import {estimatedOverview} from "./components/estimatedOverview.js";
 import {overviewYearWeekday} from "./components/overviewYear.js";
 import {createMap} from "./components/mapUtils.js";
+import {plotNormalizedData, getTrendCompareData, getFistAndSecondTrendYears} from './components/historyPlot.js';
 ```
 
 # Gent
@@ -46,7 +48,7 @@ createMap(sites, 13);
 
 ## Drukte
 ```js
-const data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new Date(b.datum) - new Date(a.datum))
+const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new Date(b.datum) - new Date(a.datum))
 ```
 ```html
 
@@ -56,14 +58,14 @@ const data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new Date(b
     </div>
     <div class="grid grid-cols-1">
         <div class="card">
-            ${resize((width) => estimatedOverview(data, 20, width))}
+            ${resize((width) => estimatedOverview(drukte_data, 20, width))}
         </div>
     </div>
 </div>
-
+<hr>
 ```
 
-## Jaaroverzicht per week
+## Jaaroverzicht
 
 ```html
 <div>
@@ -83,4 +85,23 @@ const data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new Date(b
         </div>
     </div>
 </div>
+<hr>
 ```
+
+## Trend
+
+```js
+// all years after year for first trend
+const firstTrend = "Gent"
+const secondTrend = "Gent"
+const trendCompareData = getTrendCompareData(cumulatieveCounts, 2020, firstTrend, secondTrend);
+const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, firstTrend, secondTrend)
+```
+<div>
+    <div>
+    <p>tekst</p>
+    </div>
+    <div class="grid grid-cols-1">
+      <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.firstTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.firstTrendActiveSince))}</div>
+    </div>
+</div>

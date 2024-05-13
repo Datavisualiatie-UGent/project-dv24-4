@@ -126,12 +126,6 @@ const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, fi
             Als laatst zien we hier ook nog de trends van alle fietspunten gelegen in Gent.
             Opnieuw zien we hier wat we al op andere grafieken hebben waargenomen.
         </p>
-        <p>
-            Mogelijks is ook het effect van de coronaperiode waarneembaar. 
-            In 2020 is er duidelijk een sterkere groei in maart.
-            Dit zou er op kunnen wijzen dat door de lockdown mensen meer buiten gingen fietsen.
-            Dit fenomeen is ook zichtbaar op de drukte grafiek en het jaaroverzicht.
-        </p>
     </div>
     <div class="grid grid-cols-1">
       <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.firstTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.firstTrendActiveSince))}</div>

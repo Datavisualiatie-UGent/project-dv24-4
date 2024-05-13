@@ -189,5 +189,15 @@ const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, fi
     <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.firstTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.firstTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
     <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.secondTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.secondTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
 </div>
+
+<div>
+    <p>
+        Mogelijks is ook het effect van de coronaperiode waarneembaar.
+        In 2020 zien we duidelijk een zwakke groei en soms zelfs een daling in maart. 
+        Dit kan erop wijzen dat de lockdown net begon en mensen binnen bleven. 
+        Opvallend is echter de enorme groei die we zien in april. 
+        Dit zou de oorzaak kunnen zijn van mensen die na verloop van tijd in lockdown veel zijn gaan fietsen.
+    </p>
+</div>
 ```
 

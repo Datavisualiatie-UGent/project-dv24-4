@@ -34,13 +34,12 @@ p {
 ```html
 <div>
     <p>
-        Er wordt dagelijks veel gefietst in België. Dit voor het plezier, 
-        maar ook heel veel woon-werk verkeer of studenten die van/naar school gaan.
-        Om dit beter in kaart te kunnen brengen heeft Agentschap wegen & verkeer Vlaanderen een 140-tal fietspunten geplaatst in Vlaanderen.
-        Hierdoor hebben ze meer zicht op bijvoorbeeld volgende dingen: hoeveel fietsers rijden er per jaar, Wat is het aantal op piekmomenten, etc.
+        In België wordt veel gefietst, zowel voor plezier, woon-werkverkeer en studenten die van/naar school gaan.
+        Om dit beter in kaart te kunnen brengen heeft Agentschap Wegen en Verkeer Vlaanderen een 140-tal fietspunten geplaatst in Vlaanderen.
+        Dit geeft hen een beter inzicht in zaken zoals het jaarlijkse aantal fietsers, de piekmomenten en meer.    
     </p>
     <p>
-        Wij hebben ons gefocust om volgende feiten te bekijken:
+        We hebben ons gericht op het onderzoeken van de volgende feiten:
     </p>
         <div>
             <ul>
@@ -62,9 +61,8 @@ p {
 ```html
 <div>
     <p>
-        Op deze map zijn alle meetpunten zichtbaar. Voor elk meetpunt is volgende info beschikbaar:
+        Op deze kaart zijn alle meetpunten zichtbaar, met extra informatie voor elk punt.    
     </p>
-
     <div>
         <ul>
             <li>Naam van de site</li>
@@ -99,8 +97,8 @@ createMap(sites);
 <div>
     <div>
         <p>
-            Het aantal fietsers op de baan is sterk afhankelijk per seizoen.
-            Vandaar hebben deze grafiek gemaakt die overheen de jaren de drukte op de fietspaden benadert.
+            Het aantal fietsers op de weg varieert sterk per seizoen. 
+            Daarom hebben we een grafiek gemaakt die de drukte op de fietspaden door de jaren heen benadert.
         </p>
     </div>
     <div class="grid grid-cols-1">

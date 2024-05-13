@@ -42,12 +42,12 @@ import {plotNormalizedData, getTrendCompareData, getFistAndSecondTrendYears} fro
 <div class="grid grid-cols-2">
     <div>
         <p>
-            Hier bekijken we specifiek de info over de Gent site.
-            Dit meetpunt bevindt zich op de fietssnelweg naast de R5 rond Gent en bestaat al sinds 22 augustus 2019.
+            Hier bekijken we specifiek de info over de Gent-site.
+            Dit meetpunt bevindt zich langs de fietssnelweg naast de R4 rond Gent en bestaat al sinds 22 augustus 2019.
         </p>
         <p>
-            Je zou verwachten dat dit soort fietspaden vooral gebruikt worden door mensen die naar hun werk fietsen en studenten die naar school gaan.
-            Dit is ook wat we in onderstaande grafieken zullen aantonen.
+            Je zou veronderstellen dat dit soort fietspaden voornamelijk gebruikt worden voor woon-werkverkeer en studenten.
+            Dit is ook wat we in de onderstaande grafieken zullen illustreren.
         </p>
     </div>
     <div class="center-map" style="width: 100%">
@@ -70,9 +70,9 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new
 <div>
     <div>
         <p>
-            Hier zien we algemene drukte van het fietspad over de tijd dat het meetpunt bestaat.
-            Het valt hier direct al op dat het fietspad vooral gebruikt wordt tussen de maanden april/juni en september/November.
-            Ook valt het op dat er bijna elke zomer een grote daling is van de drukte.
+            De grafiek toont de algemene drukte op het fietspad gedurende de periode dat het meetpunt operationeel is. 
+            Het is meteen duidelijk dat het fietspad voornamelijk wordt gebruikt tussen de maanden april tot juni en september tot november. 
+            Bovendien valt op dat er bijna elk jaar een aanzienlijke daling van de drukte te zien is tijdens de zomermaanden.
         </p>
     </div>
     <div class="grid grid-cols-1">
@@ -90,15 +90,16 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new
 <div>
     <div>
         <p>
-            Hier zien we een jaaroverzicht dat geordend is per weekdag. Zo staan alle zondagen op eenzelfde lijn.
-            Hier valt het ook al direct op dat dit fietspad veel meer gebruikt wordt op maandag tot en met vrijdag dan in het weekend.
+            Deze grafiek geeft een jaaroverzicht dat geordend is per weekdag. Zo staat een bepaalde weekdag op eenzelfde lijn.
+            Het is hier meteen duidelijk dat dit fietspad aanzienlijk meer wordt gebruikt op maandag tot en met vrijdag dan in het weekend.
         </p>
         <p>
-            We zien hier opnieuw goed dat dit fietspad vooral gebruikt wordt tussen april/juni en september/November. 
-            De maanden dat er het meeste studenten rondfietsen 
+            We zien hier opnieuw goed dat dit fietspad vooral gebruikt wordt tussen april tot juni en september tot november. 
+            De maanden dat de meeste studenten rondfietsen in Gent.
         </p>
         <p>
-            Als laatst vallen ook de vakanties enorm op. Zo zien we dat in de herfstvakantie er amper fietsers zijn.
+            Ten slotte vallen ook de vakantieperiodes op. 
+            Zo is te zien dat er tijdens de herfstvakantie aanzienelijk minder fietsers zijn.        
         </p>
     </div>
     <div class="grid grid-cols-1">
@@ -122,8 +123,8 @@ const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, fi
 <div>
     <div>
         <p>
-            Als laatst zien we hier ook nog de trends van alle fietspunten gelegen in Gent. 
-            Hier zien we opnieuw wat we ook op de andere grafieken zagen.
+            Als laatst zien we hier ook nog de trends van alle fietspunten gelegen in Gent.
+            Opnieuw zien we hier wat we al op andere grafieken hebben waargenomen.
         </p>
     </div>
     <div class="grid grid-cols-1">

@@ -18,6 +18,7 @@ const in_out = FileAttachment("data/inOutData.csv").csv({typed: true});
 const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true});
 const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").json();
 
+import {createMap} from "./components/mapUtils.js";
 import {overviewYearMonth, overviewYearWeekday} from "./components/overviewYear.js";
 import {doubleBarHorizontal} from "./components/dailyVolume.js";
 import {estimatedOverview} from "./components/estimatedOverview.js";
@@ -43,7 +44,10 @@ const names = Array.from(siteIDs.keys()).sort();
 # Explore it yourself
 ```html
 <div>
-    <p>Hier kan je zelf spelen</p>
+    <p>
+        Hier kan je zelf experimenteren. 
+        De volgende visualisaties zijn afhankelijk van welke site je kiest.
+    </p>
 </div>
 ```
 
@@ -51,51 +55,23 @@ const names = Array.from(siteIDs.keys()).sort();
 ```js
 let selectedSite = view(Inputs.select(names, {value: "Gent"}))
 ```
-
-
-## Gemiddeld aantal tellingen per meetpunt
 ```js
 let selectedSiteId = siteIDs.get(selectedSite)
 ```
-
-```html
-<div>
-    <p>
-        Over het algemeen is bij de meeste punten de volgende trend te zien:
-        rond 8h is er een toename van fietsers in beide richtingen, dit zal de ochtendspits zijn van iedereen die naar het werk moet.
-        De avondspits is meer uitgesmeerd aangezien sommige mensen langer werken of misschien nog een activiteit hebben na het werk.
-        Sommige meetpunten liggen langs een grote baan, en zijn gesplitst in 2 stations. Hierdoor is er een asymmetrie tussen het binnenkomende en uitgaande verkeer.
-        Een paar voorbeelden hiervan zijn 'Ardooie teller 1' en 'Ardooie teller 2'.
-        De oriëntatie van de teller is ook niet altijd consistent zoals bijvoorbeeld bij 'Brasschaat 2' en 'Brasschaat 1'
-    </p>
-    <h3>${selectedSite}:</h3>
-</div>
-```
-
-
-
-```js
-let data = in_out.filter(item => item.siteID === selectedSiteId).sort((a, b) => new Date(a.timeframe) > new Date(b.timeframe))
-```
-
-<div class="grid grid-cols-1">
-
-  <div class="card">${resize((width) => doubleBarHorizontal(data, {width}))}</div>
-
-</div>
 
 ## Drukte
 
 ```js
 const drukte_data = jaaroverzicht.filter(d => d.siteID === selectedSiteId).sort((a,b) => new Date(b.datum) - new Date(a.datum))
 ```
-```html
 
+```html
 <div>
     <div>
         <p>
-            Op onderstaande grafiek is opnieuw te zien dat er in de zomermaanden heel wat meer mensen de fiets nemen om zich te verplaatsen. De minima van de grafiek bevinden zich meestal rond de maand januari, aangezien het dan zeer koud en nat kan zijn.
-            Het is wel opmerkelijk dat er ook een daling in de grafieken te zien is rond augustus. Het is nochtans meestal goed weer in die periode. Misschien dat er dan meer mensen op reis gaan dan in juli.
+            Om een gevoel te krijgen wanneer de drukkere periodes zijn aan een gegeven tellingespunt, hebben we volgende grafiek gemaakt.
+            Hierop kan je zien hoeveel fietsers er ongeveer op deze plaats passeren op een bepaalde periode.
+            Het is hier direct mogelijk om te zien wanneer de drukke en rustigere periodes zijn.
         </p>
     </div>
     <div class="grid grid-cols-1">
@@ -105,6 +81,33 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === selectedSiteId).sort(
     </div>
 </div>
 <hr>
+```
+
+## Gemiddeld aantal inkomende en uitgaande fietsers
+
+```js
+const inOutData = in_out.filter(item => item.siteID === selectedSiteId).sort((a, b) => new Date(a.timeframe) > new Date(b.timeframe))
+```
+
+```html
+    <div>
+        <p>
+            Er wordt ook bijgehouden in welke richting fietsers passeren langs een telpunt.
+            Dit wordt weergegeven in de volgende grafiek.
+            Hier tonen we het gemiddelde aantal fietsers, opgesplitst naar de richting waarin ze fietsen.
+            Deze grafiek kan worden gebruikt om te beoordelen of dit fietspad voornamelijk wordt gebruikt tijdens de ochtend- en avondspits.
+        </p>
+        <p>
+            Sommige meetpunetn liggen echter langs een brede baan, waardoor ze gesplitst zijn.
+            Hierdoor kan er dus soms asymmetrie zijn tussen het binnenkomende en uitgaande verkeer.
+            Een paar voorbeelden hiervan zijn 'Ardooie teller 1' en 'Ardooie teller 2'.
+            Ook de oriëntatie van de teller is ook niet altijd consistent zoals bijvoorbeeld bij 'Brasschaat 2' en 'Brasschaat 1'
+        </p>
+    </div>
+    <div class="grid grid-cols-1">
+      <div class="card">${resize((width) => doubleBarHorizontal(inOutData, {width}))}</div>
+    </div>
+    <hr>
 ```
 
 ## Jaaroverzicht
@@ -117,28 +120,29 @@ const SelectedYearInput = Inputs.select(all_years)
 const selectedYear = Generators.input(SelectedYearInput)
 ```
 
+```html
+<div>
+    <div>
+        <div>${SelectedYearInput}</div>
+    </div>
 
-<div class="card" style="display: flex; gap: 0.5rem;">
-    <div>${SelectedYearInput}</div>
+    <div class="grid grid-cols-1">
+        <div class="card">
+            ${resize((width) => overviewYearMonth(jaaroverzicht, parseInt(selectedYear), parseInt(selectedSiteId), width))}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1">
+        <div class="card">
+            ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(selectedSiteId), width))}
+        </div>
+    </div>
 </div>
+<hr>
 
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => overviewYearMonth(jaaroverzicht, parseInt(selectedYear), parseInt(selectedSiteId), width))}
-  </div>
-</div>
-
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(selectedSiteId), width))}
-  </div>
-</div>
+```
 
 
-
-<!-- 
-TREND 
--->
 ## Trend fietstellingen
 
 <div>Patronen, in dit geval trends genoemd, worden zichtbaar gedurende een bepaalde periode. We concentreren ons hier op trends die zich binnen één jaar voordoen. Door deze trends te onderzoeken, kunnen we veel leren over de groei en afname van fietsers in een bepaalde gemeente gedurende deze periode.</div>
@@ -166,26 +170,34 @@ const secondTrend = view(Inputs.select(possibleSencondTrends), {value: possibleS
 
 ```js
 const trendCompareData = getTrendCompareData(cumulatieveCounts, year, firstTrend, secondTrend);
-```
-</div>
-<div class="grid grid-cols-1">
-  <div class="card">${resize((width) => plotNormalizedData(trendCompareData.filteredObj, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, trendCompareData.totalMothsCount, {width: width}))}</div>
-</div>
-
-<div>Over het algemeen is opmerkelijk dat er een aanzienlijke groei is tijdens de lente- en zomermaanden, naarmate het weer verbetert. Bovendien is er een duidelijke overgang naar de koudere herfst- en wintermaanden te zien, gekenmerkt door een significante neerwaartse trend.</div>
-
-```js
-// all years after year for first trend
 const fistAndSecondTrendYears = getFistAndSecondTrendYears(cumulatieveCounts, firstTrend, secondTrend)
 ```
 
-<div class="grid grid-cols-2">
-  <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.firstTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.firstTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
-  <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.secondTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.secondTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
+</div>
+    <div class="grid grid-cols-1">
+      <div class="card">${resize((width) => plotNormalizedData(trendCompareData.filteredObj, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, trendCompareData.totalMothsCount, {width: width}))}</div>
+    </div>
+
+```html
+<div>
+    <p>
+        Naast de vergelijking tussen 2 gemeentes, hebben we ook een trend die eenzelfde gemeente vergelijkt door de jaren heen.
+    </p>
 </div>
 
-<div>Ook het effect van de coronaperiode is waarneembaar. In 2020 begint de groei van fietsgebruik langzamer, wat toe te wijten is aan de start van de lockdown in maart. Dit fenomeen is ook duidelijk zichtbaar in de grafiek van de drukte. In latere jaren blijft de groei meestal rond dezelfde maanden plaatsvinden.</div>
+<div class="grid grid-cols-2">
+    <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.firstTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.firstTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
+    <div class="card">${resize((width) => plotNormalizedData(fistAndSecondTrendYears.secondTrendsYears, trendCompareData.startDate, trendCompareData.gemeenteActiveSince, fistAndSecondTrendYears.totalMothsCount, {width: width}, fistAndSecondTrendYears.secondTrendActiveSince, fistAndSecondTrendYears.minY, fistAndSecondTrendYears.maxY))}</div>
+</div>
 
-<!-- 
-TREND 
--->
+<div>
+    <p>
+        Mogelijks is ook het effect van de coronaperiode waarneembaar.
+        In 2020 zien we duidelijk een zwakke groei en soms zelfs een daling in maart. 
+        Dit kan erop wijzen dat de lockdown net begon en mensen binnen bleven. 
+        Opvallend is echter de enorme groei die we zien in april. 
+        Dit zou de oorzaak kunnen zijn van mensen die na verloop van tijd in lockdown veel zijn gaan fietsen.
+    </p>
+</div>
+```
+

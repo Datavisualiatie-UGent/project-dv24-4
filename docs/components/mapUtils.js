@@ -20,7 +20,6 @@ function createPopUp(d) {
     return 'Site ID: ' + d.siteID + '<br>' +
     'Naam site: ' + d.naam + '<br>' +
     'Naam gemeente: ' + d.gemeente + '<br>' +
-    'Interval tellingen: ' + d.interval + "minuten" + '<br>' +
     extractInstallationDate(d)
 }
 

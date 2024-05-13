@@ -93,7 +93,10 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === selectedSiteId).sort(
 
 <div>
     <div>
-        <p>tekst</p>
+        <p>
+            Op onderstaande grafiek is opnieuw te zien dat er in de zomermaanden heel wat meer mensen de fiets nemen om zich te verplaatsen. De minima van de grafiek bevinden zich meestal rond de maand januari, aangezien het dan zeer koud en nat kan zijn.
+            Het is wel opmerkelijk dat er ook een daling in de grafieken te zien is rond augustus. Het is nochtans meestal goed weer in die periode. Misschien dat er dan meer mensen op reis gaan dan in juli.
+        </p>
     </div>
     <div class="grid grid-cols-1">
         <div class="card">

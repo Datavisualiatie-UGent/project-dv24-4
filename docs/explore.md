@@ -87,7 +87,7 @@ let data = in_out.filter(item => item.siteID === selectedSiteId).sort((a, b) => 
 ## Drukte
 
 ```js
-const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new Date(b.datum) - new Date(a.datum))
+const drukte_data = jaaroverzicht.filter(d => d.siteID === selectedSiteId).sort((a,b) => new Date(b.datum) - new Date(a.datum))
 ```
 ```html
 

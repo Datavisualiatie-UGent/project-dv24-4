@@ -65,7 +65,7 @@ createMap(sites, 19);
 </div>
 ```
 
-## Inkomend en uitgaand verkeerd
+## Inkomend en uitgaand verkeer
 
 ```js
 const inOutData = in_out.filter(item => item.siteID === 19).sort((a, b) => new Date(a.timeframe) > new Date(b.timeframe))

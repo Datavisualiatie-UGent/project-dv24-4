@@ -94,7 +94,7 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new
             Hier valt het ook al direct op dat dit fietspad veel meer gebruikt wordt op maandag tot en met vrijdag dan in het weekend.
         </p>
         <p>
-            We hier opnieuw goed dat dit fietspad vooral gebruikt wordt tussen april/juni en september/November. 
+            We zien hier opnieuw goed dat dit fietspad vooral gebruikt wordt tussen april/juni en september/November. 
             De maanden dat er het meeste studenten rondfietsen 
         </p>
         <p>

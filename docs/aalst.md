@@ -52,6 +52,11 @@ createMap(sites, 19);
 ```
 
 ## Jaaroverzicht
+```js
+const jaarWeekTitle = "Jaaroverzicht van Aalst 1 - per week"
+const jaarWeekSubtitle = "Het totaal aantal fietsers op één dag is weergegeven. Elke rij is een weekdag."
+```
+
 ```html
 <div>
     <div>
@@ -59,7 +64,7 @@ createMap(sites, 19);
     </div>
     <div class="grid grid-cols-1">
         <div class="card">
-            ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(19), width))}
+            ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(19),jaarWeekTitle,jaarWeekSubtitle, width))}
         </div>
     </div>
 </div>

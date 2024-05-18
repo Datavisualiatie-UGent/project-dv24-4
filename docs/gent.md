@@ -15,7 +15,7 @@ const jaaroverzicht = FileAttachment("data/jaaroverzicht.csv").csv({typed: true}
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").json();
 
-import {estimatedOverview} from "./components/estimatedOverview.js";
+import {generalOverview} from "./components/generalOverview.js";
 import {overviewYearWeekday} from "./components/overviewYear.js";
 import {createMap} from "./components/mapUtils.js";
 import {plotNormalizedData, getTrendCompareData, getFistAndSecondTrendYears} from './components/historyPlot.js';
@@ -65,6 +65,12 @@ createMap(sites, 13);
 ```js
 const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new Date(b.datum) - new Date(a.datum))
 ```
+
+```js
+const overviewTitle= "Drukte benadering in Gent"
+const overviewSubtitle = "Benadering van het aantal fietsers die dit meetpunt voorbij fietsen."
+```
+
 ```html
 
 <div>
@@ -77,7 +83,7 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new
     </div>
     <div class="grid grid-cols-1">
         <div class="card">
-            ${resize((width) => estimatedOverview(drukte_data, 20, width))}
+            ${resize((width) => generalOverview(drukte_data, 20,overviewTitle,overviewSubtitle, width))}
         </div>
     </div>
 </div>
@@ -85,6 +91,11 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new
 ```
 
 ## Jaaroverzicht
+
+```js
+const jaarWeekTitle = "Jaaroverzicht van Gent - per week"
+const jaarWeekSubtitle = "Het totaal aantal fietsers op één dag is weergegeven. Elke rij is een weekdag."
+```
 
 ```html
 <div>
@@ -104,7 +115,7 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === 13).sort((a,b) => new
     </div>
     <div class="grid grid-cols-1">
         <div class="card">
-            ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(13), width))}
+            ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(13),jaarWeekTitle,jaarWeekSubtitle, width))}
         </div>
     </div>
 </div>

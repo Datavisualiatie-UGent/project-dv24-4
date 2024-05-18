@@ -22,13 +22,14 @@ function filterData(data, year=null, site=null) {
  * @param {number} year
  * @param {*} site
  */
-export function overviewYearMonth(data, year, site, width) {
+export function overviewYearMonth(data, year, site, title, subtitle, width) {
     // Only use the data of the correct year and site
     const filtered = filterData(data, year, site)
 
     // create the plot
     return Plot.plot({
-        title: "Jaaroverzicht - maand",
+        title: title,
+        subtitle: subtitle,
         padding: 0,
         color: {type: "linear", scheme: "Greens"},
         width: width,
@@ -59,13 +60,14 @@ export function overviewYearMonth(data, year, site, width) {
  * @param {*} data
  * @param {*} site
  */
-export function overviewYearWeekday(data, site, width) {
+export function overviewYearWeekday(data, site, title, subtitle, width) {
     // Only use the data of the correct year and site
     // const filtered = filterData(data, year, site)
     const filtered = filterData(data, undefined, site)
     // create the plot
     return Plot.plot({
-        title: "Jaaroverzicht - weekdag",
+        title: title,
+        subtitle: subtitle,
         padding: 0,
         color: {type: "linear", scheme: "Greens"},
         width: width,

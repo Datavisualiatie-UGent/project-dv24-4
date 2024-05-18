@@ -83,13 +83,18 @@ const estimatedCounts = FileAttachment("data/estimatedCounts.csv").csv({typed: t
 const totalCounts = FileAttachment("data/totalCounts.csv").csv({typed: true});
 const sites = FileAttachment("data/sites.csv").csv({typed: true});
 
-import {estimatedOverview} from "./components/estimatedOverview.js"
+import {generalOverview} from "./components/generalOverview.js"
 import {createMap} from "./components/mapUtils.js";
 import {barChart} from "./components/barChartSiteIDAantal.js";
 ```
 
 ```js
 createMap(sites);
+```
+
+```js
+const overviewTitle = "Algemene drukte benadering"
+const overviewSubtitle= "Benadering van de drukte op de fietspaden vanaf het begin van de metingen."
 ```
 
 ## Drukte benadering
@@ -103,7 +108,7 @@ createMap(sites);
     </div>
     <div class="grid grid-cols-1">
     <div class="card">
-        ${resize((width) => estimatedOverview(estimatedCounts,50, width, false))}
+        ${resize((width) => generalOverview(estimatedCounts,50, overviewTitle, overviewSubtitle, width, false))}
     </div>
     </div>
 </div>

@@ -22,9 +22,16 @@ We used the data from Agenschap Wegen en Verkeer. The raw data can be found [her
 
 This project is made with [Observable Framework](https://observablehq.com/framework) project. To start your developing environment, run:
 
+on windows:
 ```
 node docs/data/allFilteredData.js
-npm run dev
+npm run dev:mem:windows
+```
+
+on linux:
+```
+node docs/data/allFilteredData.js
+npm run dev:mem:linux
 ```
 
 Then visit <http://localhost:3000> to preview the data visualisations.
@@ -32,8 +39,16 @@ Then visit <http://localhost:3000> to preview the data visualisations.
 # Building
 
 To build our visualisations as sa static website, run the following commands.
+on windows:
 ```
 node docs/data/allFilteredData.js
-npm run dev
+npm run build:mem:windows
 ```
+
+on linux:
+```
+node docs/data/allFilteredData.js
+npm run build:mem:linux
+```
+
 The static website can be found in de `.dist/` folder.

@@ -21,7 +21,7 @@ const cumulatieveCounts = FileAttachment("data/cumulativeMeanPerMonth.json").jso
 import {createMap} from "./components/mapUtils.js";
 import {overviewYearMonth, overviewYearWeekday} from "./components/overviewYear.js";
 import {doubleBarHorizontal} from "./components/dailyVolume.js";
-import {estimatedOverview} from "./components/estimatedOverview.js";
+import {generalOverview} from "./components/generalOverview.js";
 import {plotNormalizedData, getTrendCompareData, getFistAndSecondTrendYears} from './components/historyPlot.js';
 ```
 
@@ -65,6 +65,11 @@ let selectedSiteId = siteIDs.get(selectedSite)
 const drukte_data = jaaroverzicht.filter(d => d.siteID === selectedSiteId).sort((a,b) => new Date(b.datum) - new Date(a.datum))
 ```
 
+```js
+const overviewTitle= `Drukte benadering in ${selectedSite}`
+const overviewSubtitle = "Benadering van het aantal fietsers die dit meetpunt voorbij fietsen."
+```
+
 ```html
 <div>
     <div>
@@ -76,7 +81,7 @@ const drukte_data = jaaroverzicht.filter(d => d.siteID === selectedSiteId).sort(
     </div>
     <div class="grid grid-cols-1">
         <div class="card">
-            ${resize((width) => estimatedOverview(drukte_data, 20, width))}
+            ${resize((width) => generalOverview(drukte_data, 20,overviewTitle,overviewSubtitle, width))}
         </div>
     </div>
 </div>
@@ -120,21 +125,65 @@ const SelectedYearInput = Inputs.select(all_years)
 const selectedYear = Generators.input(SelectedYearInput)
 ```
 
+```js
+const jaarMonthTitle = `Jaaroverzicht van ${selectedSite} in ${parseInt(selectedYear)} - per maand`
+const jaarMonthSubtitle = "Het totaal aantal fietsers op één dag is weergegeven. Elke rij is één maand."
+
+const jaarWeekTitle = `Jaaroverzicht van ${selectedSite} - per week`
+const jaarWeekSubtitle = "Het totaal aantal fietsers op één dag is weergegeven. Elke rij is een weekdag."
+```
+
 ```html
 <div>
+    <div>
+        <p>
+            Je zou verwachten dat er in de data zeker patronen zijn te herkennen,
+            zoals dat er meer gefietst zou worden in de zomer dan de winter of dat er bijvoorbeeld meer fietsers in de week zijn dan in het weekend.
+            Om dit te kunnen weergeven hebben we twee jaaroverzichten voorzien.
+        </p>
+
+        <p>
+            De eerste grafiek geeft een overzicht van één jaar waar elke dag van het jaar wordt weergegeven door het aantal fietsers op die dag.
+            De dagen zijn hier geordend per maand, zo is 1 rij gelijk aan 1 maand.
+            Dagen met meer fietsers zijn donkerder gekleurd.
+            Het jaar dat wordt weergegeven kan je zelf kiezen aan de hand van onderstaande dropdown.
+        </p>
+
+        <p>
+            De tweede grafiek geeft een overzicht van alle jaren in de data.
+            Maar hier wordt de data geordend per week i.p.v. per maand.
+            Zo zijn patronen die afhankelijk zijn per week beter zichtbaar.
+        </p>
+    </div>
+    
     <div>
         <div>${SelectedYearInput}</div>
     </div>
 
     <div class="grid grid-cols-1">
         <div class="card">
-            ${resize((width) => overviewYearMonth(jaaroverzicht, parseInt(selectedYear), parseInt(selectedSiteId), width))}
+            ${resize((width) => overviewYearMonth(
+                                    jaaroverzicht, 
+                                    parseInt(selectedYear), 
+                                    parseInt(selectedSiteId),
+                                    jaarMonthTitle,
+                                    jaarMonthSubtitle,
+                                    width
+                                )
+            )}
         </div>
     </div>
 
     <div class="grid grid-cols-1">
         <div class="card">
-            ${resize((width) => overviewYearWeekday(jaaroverzicht, parseInt(selectedSiteId), width))}
+            ${resize((width) => overviewYearWeekday(
+                                    jaaroverzicht, 
+                                    parseInt(selectedSiteId),
+                                    jaarWeekTitle,
+                                    jaarWeekSubtitle,
+                                    width
+                                )
+            )}
         </div>
     </div>
 </div>

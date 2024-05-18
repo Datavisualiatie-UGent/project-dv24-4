@@ -1,8 +1,9 @@
 import * as Plot from "npm:@observablehq/plot";
 
-export function estimatedOverview(data, k, width, showY= true) {
+export function generalOverview(data, k, title, subtitle, width, showY= true) {
     return Plot.plot({
-        title: "Drukte benadering",
+        title: title,
+        subtitle: subtitle,
         width: width,
         x: {
             label: "datum"

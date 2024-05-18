@@ -38,7 +38,7 @@ Then visit <http://localhost:3000> to preview the data visualisations.
 
 # Building
 
-To build our visualisations as sa static website, run the following commands.
+To build our visualisations as a static website, run the following commands.
 on windows:
 ```
 node docs/data/allFilteredData.js
@@ -51,4 +51,4 @@ node docs/data/allFilteredData.js
 npm run build:mem:linux
 ```
 
-The static website can be found in de `.dist/` folder.
+The static website can be found in the `.dist/` folder.

@@ -74,7 +74,7 @@ const overviewSubtitle = "Benadering van het aantal fietsers die dit meetpunt vo
 <div>
     <div>
         <p>
-            Om een gevoel te krijgen wanneer de drukkere periodes zijn aan een gegeven tellingespunt, hebben we volgende grafiek gemaakt.
+            Om een idee te krijgen van wanneer de drukke periodes zijn bij een bepaald meetpunt, hebben we volgende grafiek gemaakt.
             Hierop kan je zien hoeveel fietsers er ongeveer op deze plaats passeren op een bepaalde periode.
             Het is hier direct mogelijk om te zien wanneer de drukke en rustigere periodes zijn.
         </p>
